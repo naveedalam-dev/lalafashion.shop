@@ -1,7 +1,7 @@
 import { configHeader } from '@/utils/constants';
 import type { NextConfig } from "next";
 
-// ─── PRIMARY DOMAIN ───────────────────────────────────────────────────────────
+// ─── PRIMARY DOMAIN (single domain — no alias enforcement needed) ─────────────
 const PRIMARY_DOMAIN = 'https://www.lalafashion.store';
 
 const nextConfig = {
