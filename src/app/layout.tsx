@@ -1,4 +1,4 @@
-﻿import { Outfit, Geist } from "next/font/google";
+import { Outfit, Geist } from "next/font/google";
 import "./globals.css";
 import { GlobalProviders } from "@/providers";
 import { generateMetadataForPage } from "@utils/helper";
@@ -21,10 +21,26 @@ export const outfit = Outfit({
 export async function generateMetadata() {
   return {
     ...(await generateMetadataForPage("", staticSeo.default)),
+    // Site-wide identity
+    applicationName: "LALA Fashion",
+    keywords: ["women fashion", "kurtis", "gowns", "suits", "Pakistan fashion", "LALA Fashion", "ready-to-wear"],
+    authors: [{ name: "LALA Fashion", url: "https://www.lalafashion.store" }],
+    creator: "LALA Fashion",
+    publisher: "LALA Fashion",
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
     icons: {
-      icon: [{ url: "/Favicon.png", type: "image/png" }],
+      icon:    [{ url: "/Favicon.png", type: "image/png" }],
       shortcut: "/Favicon.png",
-      apple: "/Favicon.png",
+      apple:   "/Favicon.png",
     },
   };
 }

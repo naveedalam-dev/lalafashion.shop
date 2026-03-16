@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { CartItem, FilterDataTypes } from "@/types/types";
 import { isArray } from "./type-guards";
 import { BASE_URL, baseUrl } from "./constants";
+import { PRIMARY_DOMAIN, SITE_NAME, OG_IMAGE } from "./metadata";
 import { ProductData } from "@components/catalog/type";
 import { CategoryNode } from "@/types/theme/category-tree";
 import { cachedGraphQLRequest } from "./hooks/useCache";
@@ -219,34 +220,31 @@ export async function generateMetadataForPage(
     other?: Record<string, string>;
   },
 ): Promise<Metadata> {
-  const seo: {
-    title?: string;
-    description?: string;
-    image?: string;
-    canonical?: string;
-    other?: Record<string, string>;
-  } = {};
-
-  // Default fallback (from your staticSeo.default)
+  // Default fallback values
   const DEFAULT_OTHER = {
     "document-meta-version": "dsv-2025.04.19-7e29",
   };
 
-  const title = seo.title || fallback?.title || "Default Title";
-  const description =
-    seo.description || fallback?.description || "Default page description.";
-  const ogImage = seo.image || fallback?.image || "/default-og.png";
-  const canonicalUrl =
-    seo.canonical || fallback?.canonical || `${BASE_URL}/${slug}`;
+  const title       = fallback?.title       || "LALA Fashion — Premium Women's Fashion";
+  const description = fallback?.description || "Pakistan's premium women's fashion store.";
+  const ogImage     = fallback?.image       || OG_IMAGE;
+
+  // Build canonical: if fallback provides a full URL use it, otherwise build from slug.
+  // Root slug '' → canonical is exactly the primary domain (no trailing slash).
+  const canonicalUrl = fallback?.canonical
+    ? fallback.canonical
+    : slug
+      ? `${PRIMARY_DOMAIN}/${slug.replace(/^\//, '')}`
+      : PRIMARY_DOMAIN;
 
   const otherMeta = {
     ...DEFAULT_OTHER,
     ...(fallback?.other || {}),
-    ...(seo.other || {}),
   };
 
   return {
-    metadataBase: new URL(baseUrl || BASE_URL || "http://localhost:3000"),
+    // metadataBase tells Next.js how to resolve relative image URLs
+    metadataBase: new URL(PRIMARY_DOMAIN),
 
     title,
     description,
@@ -255,22 +253,23 @@ export async function generateMetadataForPage(
       title,
       description,
       url: canonicalUrl,
-      siteName: "Your Store Name",
+      siteName: SITE_NAME,
       type: "website",
       images: [
         {
           url: ogImage,
           width: 1200,
           height: 630,
+          alt: SITE_NAME,
         },
       ],
     },
 
     twitter: {
-      card: "summary_large_image",
+      card:        "summary_large_image",
       title,
       description,
-      images: [ogImage],
+      images:      [ogImage],
     },
 
     alternates: {

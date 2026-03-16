@@ -1,12 +1,27 @@
-import type { MetadataRoute } from 'next'
- 
+import type { MetadataRoute } from 'next';
+
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: {
-      userAgent: '*',
-      allow: '/',
-      disallow:  ['/customer/*', '/checkout'],
-    },
-    sitemap: `${process.env.NEXT_PUBLIC_NEXT_AUTH_URL}/sitemap.xml`,
-  }
+    rules: [
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: [
+          '/admin-login/',
+          '/admin-login',
+          '/api/',
+          '/api',
+          '/_next/',
+          '/customer/register',
+          '/customer/login',
+          '/customer/forget-password',
+          '/checkout/',
+          '/checkout',
+          '/success',
+        ],
+      },
+    ],
+    sitemap: 'https://www.lalafashion.store/sitemap.xml',
+    host:    'https://www.lalafashion.store',
+  };
 }
