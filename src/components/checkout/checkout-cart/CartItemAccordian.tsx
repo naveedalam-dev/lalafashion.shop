@@ -99,9 +99,9 @@ export default function CartItemAccordion({
                             {item?.node?.name}
                           </span>
                           <span className="font-normal text-black dark:text-white">
-                            Quantity : {item.node.quantity}
+                            Quantity : {item?.node?.quantity}
                           </span>
-                          {item.name !== DEFAULT_OPTION ? (
+                          {item?.node?.name !== DEFAULT_OPTION ? (
                             <p className="text-sm lowercase line-clamp-1 text-neutral-500 dark:text-neutral-400">
                               {item?.node?.sku}
                             </p>

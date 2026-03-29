@@ -6,6 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 // Simple hook to close dropdowns on outside click
 function useOutsideClick(ref: React.RefObject<HTMLElement | null>, callback: () => void) {
@@ -25,6 +27,8 @@ export default function Header() {
     const [showUserMenu, setShowUserMenu] = useState(false);
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
+    const supabase = createClient();
+    const router = useRouter();
 
     useEffect(() => {
         setMounted(true);
@@ -35,6 +39,16 @@ export default function Header() {
 
     useOutsideClick(notifRef, () => setShowNotifications(false));
     useOutsideClick(userRef, () => setShowUserMenu(false));
+
+    const handleSignOut = async () => {
+        const { error } = await supabase.auth.signOut();
+        if (!error) {
+            router.push("/admin-login");
+            router.refresh(); // Clear server segments
+        } else {
+            console.error("Error signing out:", error.message);
+        }
+    };
 
     return (
         <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-[#e5e5e5] dark:border-gray-800 bg-[#f6f6f7] dark:bg-[#09090b] px-4 md:px-8 transition-colors">
@@ -134,7 +148,10 @@ export default function Header() {
                                 </Link>
                             </div>
                             <div className="p-1.5 border-t border-gray-100 dark:border-gray-800">
-                                <button className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md">
+                                <button 
+                                    onClick={handleSignOut}
+                                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors"
+                                >
                                     <LogOut className="h-4 w-4 text-red-500" />
                                     Sign Out
                                 </button>

@@ -44,7 +44,7 @@ const AboutPage = () => {
                         <h2 className="text-blue-600 font-bold tracking-wider uppercase text-sm mb-3">Evolution & Growth</h2>
                         <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4">Our Historical Timeline</h1>
                         <p className="text-gray-600 dark:text-neutral-400 max-w-2xl mx-auto text-sm md:text-base">
-                            Explore how LALA Fashion transformed from a boutique vision into Pakistan's premier digital destination for premium clothing.
+                            Explore how LALA Fashion transformed from a boutique vision into Pakistan's premier digital destination for premium luxury and lifestyle products.
                         </p>
                     </div>
 

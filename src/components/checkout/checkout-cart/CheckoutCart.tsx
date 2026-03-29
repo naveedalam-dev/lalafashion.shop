@@ -57,7 +57,7 @@ export default function CheckoutCart({ cartItems, selectedShippingRate: _id }: {
                           <h1 className="font-outfit text-lg font-medium">
                             {item?.node?.name}
                           </h1>
-                          {item.name !== DEFAULT_OPTION ? (
+                          {item?.node?.name !== DEFAULT_OPTION ? (
                             <p className="text-sm font-normal text-neutral-500 dark:text-neutral-400">
                               {item?.node?.sku}
                             </p>

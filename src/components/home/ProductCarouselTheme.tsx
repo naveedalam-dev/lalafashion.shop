@@ -22,17 +22,16 @@ const Theme = ({ title, description, products }: ProductsSectionProps) => {
               baseUrl,
               NOT_IMAGE,
             );
-            const ProductPrice =
-              item?.type === "configurable"
-                ? (item?.minimumPrice ?? "0")
-                : (item?.price ?? "0");
+            const price = item?.price ?? "0";
+            const specialPrice = item?.specialPrice ?? null;
 
             return (
               <ProductCard
                 key={item.id ?? index}
-                currency="USD"
+                currency="PKR"
                 imageUrl={imageUrl || ""}
-                price={String(ProductPrice)}
+                price={String(price)}
+                specialPrice={specialPrice ? String(specialPrice) : undefined}
                 product={{
                   urlKey: item.urlKey || item.sku,
                   name: item?.name || item.sku,
@@ -40,7 +39,6 @@ const Theme = ({ title, description, products }: ProductsSectionProps) => {
                   type: item.type,
                   isSaleable: item.isSaleable,
                 }}
-                specialPrice={item.specialPrice ? String(item.specialPrice) : undefined}
                 priority={index < 4}
                 rating={item.rating || 0}
                 reviewCount={item.reviewCount || 0}

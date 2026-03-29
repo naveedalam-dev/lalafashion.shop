@@ -19,22 +19,22 @@ export function ProductsSection({ title, description, products }: ProductsSectio
       <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {products.map((item, index) => {
           const imageUrl = getImageUrl(item?.baseImageUrl, baseUrl, NOT_IMAGE);
-          const ProductPrice =
-            item?.type === "configurable"
-              ? item?.minimumPrice ?? "0"
-              : item?.price ?? "0";
+          const price = item?.price ?? "0";
+          const specialPrice = item?.specialPrice ?? null;
           return (
             <ProductCard
               key={item.id ?? index}
-              currency="USD"
+              currency="PKR"
               imageUrl={imageUrl || ""}
-              price={String(ProductPrice)}
+              price={String(price)}
+              specialPrice={specialPrice ? String(specialPrice) : undefined}
               product={{
                 urlKey: item.urlKey || item.sku,
                 name: item?.name || item.sku,
                 id: item.id,
                 type: item.type,
-              }} specialPrice={""} />
+              }} 
+            />
           );
         })}
       </Grid>

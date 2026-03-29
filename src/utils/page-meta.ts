@@ -52,8 +52,8 @@ export function makePageMeta({
 export const PAGE_META = {
   about: makePageMeta({
     slug: "about",
-    title: "About Us | LALA Fashion — Pakistan's Premium Fashion Store",
-    description: "Learn about LALA Fashion — a Pakistan-based premium women's fashion brand offering kurtis, gowns, and ready-to-wear clothing since 2020.",
+    title: "About Us | LALA Fashion — Pakistan's Premium Luxury Store",
+    description: "Learn about LALA Fashion — a Pakistan-based digital destination offering premium luxury gifts, jewelry, watches, and high-end accessories since 2020.",
   }),
 
   contact: makePageMeta({

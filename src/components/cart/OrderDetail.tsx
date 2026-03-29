@@ -50,9 +50,42 @@ export default function OrderDetail() {
   const handleCopyId = () => {
     if (!order) return;
     const trackingId = `#ST-${order.order_number}`;
-    navigator.clipboard.writeText(trackingId);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    
+    const copySuccess = () => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    };
+
+    // 1. Try modern Clipboard API (Requires Secure Context - HTTPS or Localhost)
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(trackingId)
+        .then(copySuccess)
+        .catch((err) => {
+          console.error("Clipboard API failed, using fallback", err);
+          fallbackCopy(trackingId, copySuccess);
+        });
+    } else {
+      // 2. Fallback for non-secure contexts (e.g., LAN IP previews)
+      fallbackCopy(trackingId, copySuccess);
+    }
+  };
+
+  // Helper for cross-browser clipboard fallback
+  const fallbackCopy = (text: string, cb: () => void) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.left = "-9999px";
+    textArea.style.top = "0";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      if (document.execCommand('copy')) cb();
+    } catch (err) {
+      console.error('Fallback copy failed', err);
+    }
+    document.body.removeChild(textArea);
   };
 
   if (isLoading) {

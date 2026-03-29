@@ -27,7 +27,7 @@ export async function generateMetadata() {
     ...(await generateMetadataForPage("", staticSeo.default)),
     // Site-wide identity
     applicationName: "LALA Fashion",
-    keywords: ["women fashion", "kurtis", "gowns", "suits", "Pakistan fashion", "LALA Fashion", "ready-to-wear"],
+    keywords: ["luxury gifts", "premium watches", "exquisite jewelry", "luxury accessories", "Pakistan premium store", "LALA Fashion", "lifestyle products"],
     authors: [{ name: "LALA Fashion", url: "https://www.lalafashion.store" }],
     creator: "LALA Fashion",
     publisher: "LALA Fashion",
@@ -73,7 +73,7 @@ export default function RootLayout({
                 width: 200,
                 height: 60,
               },
-              description: "Pakistan's premium eCommerce destination for women's fashion — kurtis, gowns, suits, and ready-to-wear clothing.",
+              description: "Pakistan's premium digital destination for luxury gifts, precision watches, and exquisite jewelry.",
               address: {
                 "@type": "PostalAddress",
                 addressCountry: "PK",

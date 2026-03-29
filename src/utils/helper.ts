@@ -314,10 +314,11 @@ export const getValidTitle = (text: string) => {
 export function safePriceValue(product: ProductData): number {
   if (typeof product?.price === "string") {
     const priceValue =
-      product?.type === "configurable"
+      product?.specialPrice ||
+      (product?.type === "configurable"
         ? (product?.minimumPrice ?? "0")
-        : (product?.price ?? "0");
-    return parseFloat(priceValue) || 0;
+        : (product?.price ?? "0"));
+    return parseFloat(String(priceValue)) || 0;
   }
   if (
     typeof product?.price === "object" &&

@@ -26,11 +26,9 @@ const Theme: FC<{
               product?.cacheGalleryImages?.[0]?.originalImageUrl ??
               product?.images?.[0]?.url ??
               NOT_IMAGE;
-            const price =
-              product?.priceHtml?.finalPrice ||
-              product?.priceHtml?.regularPrice ||
-              "0";
-            const currency = product?.priceHtml?.currencyCode;
+            const price = product?.priceHtml?.regularPrice || "0";
+            const specialPrice = product?.priceHtml?.finalPrice < product?.priceHtml?.regularPrice ? product?.priceHtml?.finalPrice : null;
+            const currency = product?.priceHtml?.currencyCode || "PKR";
 
             return (
               <ProductCard
@@ -38,6 +36,7 @@ const Theme: FC<{
                 currency={currency}
                 imageUrl={imageUrl}
                 price={price}
+                specialPrice={specialPrice}
                 product={product}
                 priority={index < 4}
               />

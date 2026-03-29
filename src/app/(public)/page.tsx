@@ -90,16 +90,25 @@ export default async function Home() {
           const avgRating = reviewCount > 0
               ? reviewList.reduce((sum: number, r: { rating: number }) => sum + r.rating, 0) / reviewCount
               : 0;
+          
+          // Logic: 
+          // 1. price = MRP (Original)
+          // 2. specialPrice = sale_price (Actual) IF it is lower than MRP
+          const originalPrice = p.mrp || p.price || 0;
+          const salePrice = p.sale_price || null;
+          const isActuallyOnSale = salePrice !== null && Number(salePrice) < Number(originalPrice);
+
           return {
               id: p.id,
               name: p.name,
               sku: p.sku || p.id,
               baseImageUrl: p.image_url || p.sm,
-              price: p.mrp || p.sale_price || p.price,
-              specialPrice: p.sale_price || null,
+              price: originalPrice,
+              specialPrice: isActuallyOnSale ? salePrice : null,
+              minimumPrice: isActuallyOnSale ? salePrice : null,
               type: "simple",
               urlKey: p.slug || p.id,
-              isSaleable: p.stock_status === 'ACTIVE',
+              isSaleable: p.stock_status === 'ACTIVE' || p.stock_status === 'IN_STOCK',
               rating: avgRating,
               reviewCount,
           };

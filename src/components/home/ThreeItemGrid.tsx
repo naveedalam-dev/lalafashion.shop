@@ -14,7 +14,7 @@ interface ThreeItemGridProps {
         urlKey: string;
         baseImageUrl: string;
         price: string | number;
-        minimumPrice?: string | number;
+        specialPrice?: string | number | null;
         type: string;
     }>;
 }
@@ -25,7 +25,7 @@ interface ProductItem {
     urlKey: string;
     baseImageUrl: string;
     price: string | number;
-    minimumPrice?: string | number;
+    specialPrice?: string | number | null;
     type: string;
 }
 
@@ -64,7 +64,8 @@ function ThreeItemGridItem({ product, size, priority }: {
                     label={{
                         position: size === 'full' ? 'center' : 'bottom',
                         title: product.name,
-                        amount: String(product.type === 'configurable' ? (product.minimumPrice || '0') : (product.price || '0')),
+                        amount: String(product.specialPrice || product.price || '0'),
+                        originalAmount: product.specialPrice ? String(product.price) : undefined,
                         currencyCode: 'PKR',
                     }}
                 />
@@ -103,7 +104,8 @@ function MobileThreeItemGridItem({ product, size, priority }: {
                     label={{
                         position: size === 'full' ? 'center' : 'bottom',
                         title: product.name,
-                        amount: String(product.type === 'configurable' ? (product.minimumPrice || '0') : (product.price || '0')),
+                        amount: String(product.specialPrice || product.price || '0'),
+                        originalAmount: product.specialPrice ? String(product.price) : undefined,
                         currencyCode: 'PKR',
                     }}
                 />

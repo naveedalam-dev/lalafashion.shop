@@ -19,12 +19,12 @@ const faqs = [
         answer: "Standard delivery across Pakistan takes 3-5 business days. Express delivery in Islamabad and Rawalpindi is available for same-day or next-day arrival."
     },
     {
-        question: "What is your return policy for stitched suits?",
-        answer: "We offer a 7-day easy return policy for unstitched fabric and ready-to-wear items in their original condition. Custom-stitched orders are generally final sale unless there is a manufacturing defect."
+        question: "What is your return policy for luxury items?",
+        answer: "We offer a 7-day easy return policy for products in their original, unused condition with all tags and packaging intact. Electronic items and accessories must be unopened to qualify for a return."
     },
     {
         question: "Do you offer international shipping?",
-        answer: "Yes, we ship our luxury Pakistani fashion worldwide. International shipping times and costs vary by country and will be calculated at checkout."
+        answer: "Yes, we ship our luxury collections worldwide. International shipping times and costs vary by country and will be calculated at checkout."
     }
 ];
 
@@ -82,7 +82,7 @@ const ContactPage = () => {
                 <div className="text-center mb-16">
                     <h1 className="text-4xl md:text-5xl font-black tracking-tight text-gray-900 dark:text-white mb-4">Get in Touch</h1>
                     <p className="mx-auto max-w-2xl text-lg text-gray-500 dark:text-neutral-400">
-                        We'd love to hear from you. Our team is always here to help with any questions, styling advice, or feedback about our latest collections.
+                        We'd love to hear from you. Our team is always here to help with any questions, product inquiries, or feedback about our latest luxury collections.
                     </p>
                 </div>
 
@@ -232,8 +232,7 @@ const ContactPage = () => {
                                     <div>
                                         <p className="font-bold text-gray-900 dark:text-white">Call Us</p>
                                         <p className="text-sm text-gray-500 dark:text-neutral-400 leading-relaxed">
-                                            0339-2255235<br />
-                                            0349-2255235
+                                            0339-2255235
                                         </p>
                                     </div>
                                 </div>

@@ -22,12 +22,12 @@ export const dynamic = "force-dynamic";
 export function generateMetadata(): Metadata {
   return {
     title: "Shop All Products | LALA Fashion",
-    description: "Browse LALA Fashion's full collection of premium women's kurtis, gowns, suits, and ready-to-wear clothing. Shop online with fast delivery across Pakistan.",
+    description: "Browse LALA Fashion's full collection of premium luxury gifts, jewelry, watches, and high-end accessories. Shop online with fast delivery across Pakistan.",
     alternates: { canonical: "https://www.lalafashion.store/shop" },
     robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
     openGraph: {
       title: "Shop All Products | LALA Fashion",
-      description: "Premium women's fashion — kurtis, gowns, suits and more. Shop now at LALA Fashion.",
+      description: "Premium luxury gifts — watches, jewelry, accessories and more. Shop now at LALA Fashion.",
       url: "https://www.lalafashion.store/shop",
       siteName: "LALA Fashion",
       type: "website",
@@ -147,15 +147,20 @@ export default async function SearchPage({
       reviewCount > 0
         ? reviewList.reduce((sum: number, r: { rating: number }) => sum + r.rating, 0) / reviewCount
         : 0;
+    const originalPrice = p.mrp || p.sale_price || 0;
+    const salePrice = p.sale_price || null;
+    const isActuallyOnSale = salePrice !== null && Number(salePrice) < Number(originalPrice);
+
     return {
+      ...p,
       id: p.id,
       name: p.name,
       sku: p.id,
-      baseImageUrl: p.image_url,
-      price: p.sale_price,
-      specialPrice: p.mrp && p.mrp > p.sale_price ? p.sale_price : null,
-      type: "simple",
+      price: originalPrice,
+      specialPrice: isActuallyOnSale ? salePrice : null,
+      minimumPrice: isActuallyOnSale ? salePrice : null,
       urlKey: p.slug || p.id,
+      baseImageUrl: p.image_url,
       isSaleable: p.stock_status === "ACTIVE" && (p.available_qty || 0) > 0,
       rating: Math.round(avgRating),
       reviewCount,
@@ -169,15 +174,32 @@ export default async function SearchPage({
     products = products.filter((p) => p.rating >= minRating);
   }
 
-  const filterAttributes: any[] = [];
+  const filterAttributes = [
+    {
+      id: "categories",
+      code: "category",
+      adminName: "Categories",
+      options: sidebarCategories.map(c => ({ id: c.slug, adminName: c.title }))
+    },
+    {
+      id: "stock",
+      code: "stock",
+      adminName: "Availability",
+      options: [
+        { id: "in_stock", adminName: "In Stock" },
+        { id: "low_stock", adminName: "Low Stock" },
+        { id: "out_of_stock", adminName: "Out of Stock" }
+      ]
+    }
+  ];
 
   return (
     <main className="max-w-[1440px] mx-auto bg-background text-foreground min-h-screen">
       {/* Hero Banner Section */}
-      <section className="px-6 md:px-12 py-8 isolate">
-        <div className="relative bg-[#e6f3f0] dark:bg-emerald-950/20 rounded-[2rem] overflow-hidden min-h-[400px] flex items-center p-8 md:p-16">
-          <div className="max-w-md relative z-10">
-            <h1 className="text-4xl md:text-5xl font-headline font-bold text-stone-900 dark:text-stone-100 mb-4">
+      <section className="px-4 md:px-12 py-6 md:py-8 isolate">
+        <div className="relative bg-[#e6f3f0] dark:bg-emerald-950/20 rounded-2xl md:rounded-[2rem] overflow-hidden min-h-[300px] md:min-h-[400px] flex items-center p-6 md:p-16">
+          <div className="max-w-md relative z-10 text-center md:text-left mx-auto md:mx-0">
+            <h1 className="text-2xl md:text-5xl font-headline font-bold text-stone-900 dark:text-stone-100 mb-4">
               Gifts and Treasures for the Discerning
             </h1>
             <p className="text-stone-700 dark:text-stone-300 font-body text-sm md:text-base leading-relaxed mb-6">
@@ -207,16 +229,18 @@ export default async function SearchPage({
       </section>
 
       {/* Utility Bar */}
-      <section className="px-6 md:px-12 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
-        <span className="text-sm font-medium text-stone-500">
+      <section className="px-4 md:px-12 py-4 flex flex-col md:flex-row justify-between items-center gap-6">
+        <span className="text-xs md:text-sm font-medium text-stone-500 order-2 md:order-1">
           Showing <span className="text-foreground font-bold">{products.length}</span> of{" "}
           <span className="text-foreground font-bold">{totalCount}</span> Products
         </span>
-        <div className="flex items-center gap-2">
-          <div className="md:hidden">
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto order-1 md:order-2">
+          <div className="md:hidden w-full sm:w-auto">
             <MobileFilter filterAttributes={filterAttributes} />
           </div>
-          <SortOrder title="Sort By" sortOrders={SortByFields} />
+          <div className="w-full sm:w-auto flex justify-center">
+            <SortOrder title="Sort" sortOrders={SortByFields} />
+          </div>
         </div>
       </section>
 
@@ -244,7 +268,7 @@ export default async function SearchPage({
               }
             />
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-8">
               <ProductGridItems products={products} />
             </div>
           )}

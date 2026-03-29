@@ -22,6 +22,7 @@ export function GridTileImage({
     title: string;
     page?: string;
     amount: string;
+    originalAmount?: string;
     currencyCode: string;
     position?: "bottom" | "center" | "left";
   };
@@ -86,6 +87,7 @@ export function GridTileImage({
       {label ? (
         <Label
           amount={label.amount}
+          originalAmount={label.originalAmount}
           currencyCode={label.currencyCode}
           page={label.page}
           position={label.position}

@@ -5,12 +5,14 @@ import { Price } from "./Price";
 const Label = ({
   title,
   amount,
+  originalAmount,
   currencyCode,
   page,
   position = "bottom",
 }: {
   title: string;
   amount: string;
+  originalAmount?: string;
   page?: string;
   currencyCode: string;
   position?: "bottom" | "center" | "left";
@@ -47,11 +49,20 @@ const Label = ({
             <LeftArrow />
           </button>
         ) : (
-          <Price
-            amount={amount}
-            className="flex-none rounded-full bg-blue-600 p-1 md:p-2 text-sm text-white"
-            currencyCode={currencyCode}
-          />
+          <div className="flex items-center gap-2">
+            {originalAmount && originalAmount !== amount && (
+              <Price
+                amount={originalAmount}
+                className="flex-none text-[10px] text-neutral-400 line-through"
+                currencyCode={currencyCode}
+              />
+            )}
+            <Price
+              amount={amount}
+              className={`flex-none rounded-full px-2 py-1 text-sm text-white ${originalAmount && originalAmount !== amount ? 'bg-[#009724]' : 'bg-blue-600'}`}
+              currencyCode={currencyCode}
+            />
+          </div>
         )}
       </div>
     </div>

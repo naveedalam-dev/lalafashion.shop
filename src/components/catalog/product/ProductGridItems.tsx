@@ -9,18 +9,16 @@ export default function ProductGridItems({
   return products.map((product: any, index: number) => {
 
     const imageUrl = getImageUrl(product?.baseImageUrl, baseUrl, NOT_IMAGE);
-    const price =
-      product?.type === "configurable"
-        ? product?.minimumPrice ?? "0"
-        : product?.price ?? "0";
-    const currency = product?.priceHtml?.currencyCode;
+    const price = product?.price ?? "0";
+    const specialPrice = product?.specialPrice ?? null;
+    const currency = product?.priceHtml?.currencyCode || "PKR";
     return (
       <ProductCard
         key={index}
         currency={currency}
         imageUrl={imageUrl || ""}
         price={price}
-        specialPrice={product?.minimumPrice}
+        specialPrice={specialPrice || product?.minimumPrice}
         product={product}
         priority={index < 4}
         rating={product?.rating || 0}

@@ -7,14 +7,14 @@ export const OG_IMAGE         = `${PRIMARY_DOMAIN}/og-image.png`;
 // ─── STATIC SEO DATA ──────────────────────────────────────────────────────────
 export const staticSeo = {
   default: {
-    title:       `${SITE_NAME} — Premium Women's Fashion`,
+    title:       `${SITE_NAME} — Premium Luxury & Lifestyle`,
     description: SITE_DESCRIPTION,
     image:       OG_IMAGE,
     canonical:   PRIMARY_DOMAIN,
   },
   register: {
     title:       `Create Account | ${SITE_NAME}`,
-    description: `Sign up for ${SITE_NAME} and get access to exclusive fashion deals.`,
+    description: `Sign up for ${SITE_NAME} for exclusive access to luxury gifts and premium accessories.`,
     image:       OG_IMAGE,
     canonical:   `${PRIMARY_DOMAIN}/customer/register`,
   },
