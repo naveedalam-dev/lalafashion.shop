@@ -95,10 +95,10 @@ const CategoryCarousel: FC<CategoryCarouselProps> = ({
     return (
       <section className="pt-8 sm:pt-12 lg:pt-20">
         <div className="md:max-w-4.5xl mx-auto mb-10 w-auto text-center md:px-36">
-           <h2 className="mb-2 text-2xl md:text-[2rem] font-bold text-gray-900 tracking-tight">
+           <h2 className="mb-2 text-2xl md:text-[2rem] font-bold text-gray-900 dark:text-white tracking-tight">
             Shop by Category
           </h2>
-          <p className="text-sm md:text-base font-medium text-gray-500 max-w-2xl mx-auto px-4">
+          <p className="text-sm md:text-base font-medium text-gray-500 dark:text-gray-400 max-w-2xl mx-auto px-4">
             Discover the latest trends! Fresh products just added—shop new
             styles, tech, and essentials before they're gone.
           </p>

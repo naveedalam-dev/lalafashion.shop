@@ -1,4 +1,4 @@
-﻿import { NOT_IMAGE } from "@/utils/constants";
+import { NOT_IMAGE } from "@/utils/constants";
 import Link from "next/link";
 import { FC } from "react";
 import { GridTileImage } from "../ui/grid/Tile";
@@ -15,7 +15,7 @@ const Category: FC<{
           {name}
         </h2>
         <p className="font-normal text-black/60 dark:text-neutral-300 text-lg">
-          Discover the latest trends! Fresh products just addedâ€”shop new styles,
+          Discover the latest trends! Fresh products just added—shop new styles,
           tech, and essentials before they&apos;re gone.
         </p>
       </div>
@@ -29,7 +29,7 @@ const Category: FC<{
               <Link
                 aria-label={`${product?.name}`}
                 className="relative h-full w-full"
-                href={`/search/${product.slug}`}
+                href={`/shop/${product.slug}`}
               >
                 <GridTileImage
                   fill

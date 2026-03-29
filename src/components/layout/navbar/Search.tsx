@@ -33,7 +33,7 @@ export default function Search({
         newParams.set("q", searchValue);
       }
       if (searchValue) {
-        router.push(createUrl("/search", newParams));
+        router.push(createUrl("/shop", newParams));
       }
     }, 400);
 
@@ -57,7 +57,7 @@ export default function Search({
       newParams.set("q", searchValue);
     }
     if (searchValue) {
-      router.push(createUrl("/search", newParams));
+      router.push(createUrl("/shop", newParams));
       onClose?.();
     }
   };

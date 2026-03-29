@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-surface": "#2e3132",
+              "surface-container-high": "#e7e8e9",
+              "surface": "#f8f9fa",
+              "tertiary-fixed": "#e2e3df",
+              "outline": "#74777d",
+              "on-secondary": "#ffffff",
+              "secondary": "#775a19",
+              "primary": "#000000",
+              "error": "#ba1a1a",
+              "on-tertiary-fixed": "#1a1c1a",
+              "on-primary-container": "#778598",
+              "surface-bright": "#f8f9fa",
+              "on-tertiary-fixed-variant": "#454745",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "secondary-fixed": "#ffdea5",
+              "tertiary": "#000000",
+              "surface-variant": "#e1e3e4",
+              "surface-container-low": "#f3f4f5",
+              "surface-tint": "#525f71",
+              "tertiary-fixed-dim": "#c6c7c3",
+              "surface-container": "#edeeef",
+              "error-container": "#ffdad6",
+              "background": "#ffffff",
+              "secondary-fixed-dim": "#e9c176",
+              "on-primary-fixed": "#0f1c2c",
+              "on-background": "#191c1d",
+              "surface-dim": "#d9dadb",
+              "inverse-on-surface": "#f0f1f2",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#261900",
+              "on-surface": "#191c1d",
+              "secondary-container": "#fed488",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-fixed-variant": "#5d4201",
+              "primary-container": "#0f1c2c",
+              "on-error": "#ffffff",
+              "outline-variant": "#c4c6cc",
+              "surface-container-highest": "#e1e3e4",
+              "on-tertiary-container": "#828481",
+              "on-primary-fixed-variant": "#3a4859",
+              "on-surface-variant": "#44474c",
+              "inverse-primary": "#bac8dc",
+              "primary-fixed-dim": "#bac8dc",
+              "tertiary-container": "#1a1c1a",
+              "on-secondary-container": "#785a1a",
+              "primary-fixed": "#d6e4f9"
+            },
+            fontFamily: {
+              "headline": ["Noto Serif"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #ffffff;
+        }
+        h1, h2, h3, .serif-text {
+            font-family: 'Noto Serif', serif;
+        }
+        .filter-shadow {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased">
+<main class="max-w-[1440px] mx-auto">
+<!-- Hero Banner Section -->
+<section class="px-6 md:px-12 py-8">
+<div class="relative bg-[#e6f3f0] rounded-[2rem] overflow-hidden min-h-[400px] flex items-center p-8 md:p-16">
+<div class="max-w-md relative z-10">
+<h1 class="text-4xl md:text-5xl font-headline font-bold text-stone-900 mb-4">Gifts and Treasures for the Discerning</h1>
+<p class="text-stone-700 font-body text-sm md:text-base leading-relaxed mb-6">
+                        Curated collections that define modern luxury. From ancestral timepieces to architectural audio, discover pieces designed to be cherished for generations.
+                    </p>
+</div>
+<!-- Abstract Hero Images Container -->
+<div class="absolute right-0 top-0 bottom-0 w-1/2 hidden md:flex items-center justify-center pointer-events-none">
+<img alt="Luxury Item" class="absolute w-48 h-48 object-cover rounded-xl shadow-lg -rotate-12 translate-x-[-120px] translate-y-[-80px]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCp_DOilbmBiePGFqfgS4kI_MqFZHfrvQRZM9Ya-4utlLEf2HmakQBvrcUuYnJDdu_TWCRqRAKoo3zp3X_L6fWyin06sn6QwTMKpkt2fvUZEqwZ5haa_HK4-eLVHbuKK0fryVJxziVLbgjTj8ee_Zr4Mj3O2JUyZk-X41misdx05CcO54gEskwG-C8qe1mOm5Tj042GApoOPL7DU_JK7_v1RKOvLkgSO6KB96Ys9-mWTRGlOKjRMtAvXdlMo15XH10p4zv9Z_8eYxw"/>
+<img alt="Watch" class="absolute w-64 h-64 object-cover rounded-xl shadow-2xl z-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBR3YHVjizvXm-2Fzeep-veC0e4Ug78PdresgIiHk_JJO6nmt4MEdEvGbI62p4EDo2kEey9JwhfQHFzx4VU7MLO7xN3UNkcoU1L9qoz6A6hS9hAjukPp75r8G95X3ZLSYJ466UVgweGjBwvXVBw8l7Hm7BlYHX9OZkgWDR5da2Bfkcob2rHw3r3EkxKjgtKNYzL96CabeeIX_kdyPfhZ0rSe6ngJIM7Z5RFmLRlvG2TDA1uANStYKoB7inj4N1UX6WHtKRP94n70FY"/>
+<img alt="Jewelry" class="absolute w-40 h-40 object-cover rounded-xl shadow-lg rotate-6 translate-x-[150px] translate-y-[100px]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCurulL8HhUPcVCXb7jbtYHalpil85Ye6cVpXIl9yqRE-XbeClYyHGuEcob9Xv1zxzlhbqHaiKCR84FvCk-L_2SKASGvULvkX70lZYw68hkRw_t5c5kZ7AiM9x6fMycmeqv9XWg7wrgxs7qAxorPcdOe-gYwnbdDSDZSe5WrHVcLSXmvyHVQ74GuoxyijYHShbR5UvhyfYwBUzHkhtZsQvAJ2vHxsklL_QT2nzjqunuuL_RVDofq4MAZx5a-tmeqZwQ6KnEMI9gRPE"/>
+</div>
+</div>
+</section>
+<!-- Utility Bar -->
+<section class="px-6 md:px-12 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+<span class="text-sm font-medium text-stone-500">Showing 156 Products</span>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold uppercase tracking-widest text-stone-400">Sort by:</span>
+<select class="border border-stone-200 rounded-lg py-2 px-4 text-sm font-medium focus:ring-0 focus:border-stone-400 outline-none">
+<option>Recommended</option>
+<option>Price: Low to High</option>
+<option>Price: High to Low</option>
+<option>Newest</option>
+</select>
+</div>
+</section>
+<div class="px-6 md:px-12 flex gap-12 pb-24">
+<!-- Left Sidebar Filter -->
+<aside class="hidden lg:block w-72 shrink-0">
+<div class="space-y-4">
+<!-- Filter Group -->
+<div class="border border-stone-100 rounded-xl overflow-hidden filter-shadow">
+<button class="w-full flex justify-between items-center px-6 py-4 bg-white hover:bg-stone-50">
+<span class="font-bold text-sm tracking-wide">Age</span>
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+</div>
+<div class="border border-stone-100 rounded-xl overflow-hidden filter-shadow bg-white">
+<button class="w-full flex justify-between items-center px-6 py-4 border-b border-stone-100">
+<span class="font-bold text-sm tracking-wide">Product type</span>
+<span class="material-symbols-outlined text-lg">expand_less</span>
+</button>
+<div class="p-6 space-y-4">
+<label class="flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-3">
+<input checked="" class="rounded border-stone-300 text-black focus:ring-0 w-4 h-4" type="checkbox"/>
+<span class="text-sm text-stone-600 group-hover:text-black">Timepieces</span>
+</div>
+<span class="text-xs text-stone-400">42</span>
+</label>
+<label class="flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-3">
+<input class="rounded border-stone-300 text-black focus:ring-0 w-4 h-4" type="checkbox"/>
+<span class="text-sm text-stone-600 group-hover:text-black">High Jewelry</span>
+</div>
+<span class="text-xs text-stone-400">18</span>
+</label>
+<label class="flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-3">
+<input class="rounded border-stone-300 text-black focus:ring-0 w-4 h-4" type="checkbox"/>
+<span class="text-sm text-stone-600 group-hover:text-black">Audio Gear</span>
+</div>
+<span class="text-xs text-stone-400">12</span>
+</label>
+<label class="flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-3">
+<input class="rounded border-stone-300 text-black focus:ring-0 w-4 h-4" type="checkbox"/>
+<span class="text-sm text-stone-600 group-hover:text-black">Bespoke</span>
+</div>
+<span class="text-xs text-stone-400">05</span>
+</label>
+<button class="text-xs font-bold text-stone-900 underline mt-2">See More</button>
+</div>
+</div>
+<div class="border border-stone-100 rounded-xl overflow-hidden filter-shadow bg-white">
+<button class="w-full flex justify-between items-center px-6 py-4 border-b border-stone-100">
+<span class="font-bold text-sm tracking-wide">Price</span>
+<span class="material-symbols-outlined text-lg">expand_less</span>
+</button>
+<div class="p-6 space-y-4">
+<label class="flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-3">
+<input class="rounded border-stone-300 text-black focus:ring-0 w-4 h-4" type="checkbox"/>
+<span class="text-sm text-stone-600 group-hover:text-black">$0 - $1,000</span>
+</div>
+<span class="text-xs text-stone-400">22</span>
+</label>
+<label class="flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-3">
+<input class="rounded border-stone-300 text-black focus:ring-0 w-4 h-4" type="checkbox"/>
+<span class="text-sm text-stone-600 group-hover:text-black">$1,000 - $5,000</span>
+</div>
+<span class="text-xs text-stone-400">54</span>
+</label>
+<label class="flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-3">
+<input checked="" class="rounded border-stone-300 text-black focus:ring-0 w-4 h-4" type="checkbox"/>
+<span class="text-sm text-stone-600 group-hover:text-black">$5,000+</span>
+</div>
+<span class="text-xs text-stone-400">80</span>
+</label>
+</div>
+</div>
+<!-- Other Filter Groups (Accordion Style) -->
+<div class="border border-stone-100 rounded-xl overflow-hidden filter-shadow bg-white">
+<button class="w-full flex justify-between items-center px-6 py-4 hover:bg-stone-50">
+<span class="font-bold text-sm tracking-wide">Theme</span>
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+</div>
+<div class="border border-stone-100 rounded-xl overflow-hidden filter-shadow bg-white">
+<button class="w-full flex justify-between items-center px-6 py-4 hover:bg-stone-50">
+<span class="font-bold text-sm tracking-wide">Availability</span>
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+</div>
+<div class="border border-stone-100 rounded-xl overflow-hidden filter-shadow bg-white">
+<button class="w-full flex justify-between items-center px-6 py-4 hover:bg-stone-50">
+<span class="font-bold text-sm tracking-wide">Piece Count</span>
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+</div>
+<div class="border border-stone-100 rounded-xl overflow-hidden filter-shadow bg-white">
+<button class="w-full flex justify-between items-center px-6 py-4 hover:bg-stone-50">
+<span class="font-bold text-sm tracking-wide">Featured</span>
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Product Grid (3 Columns) -->
+<div class="flex-1">
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+<!-- Product Card 1 -->
+<div class="group flex flex-col">
+<div class="relative aspect-square bg-[#f5f6f8] rounded-2xl overflow-hidden mb-6">
+<img alt="The Alchemist Chrono" class="w-full h-full object-cover p-8 group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBR3YHVjizvXm-2Fzeep-veC0e4Ug78PdresgIiHk_JJO6nmt4MEdEvGbI62p4EDo2kEey9JwhfQHFzx4VU7MLO7xN3UNkcoU1L9qoz6A6hS9hAjukPp75r8G95X3ZLSYJ466UVgweGjBwvXVBw8l7Hm7BlYHX9OZkgWDR5da2Bfkcob2rHw3r3EkxKjgtKNYzL96CabeeIX_kdyPfhZ0rSe6ngJIM7Z5RFmLRlvG2TDA1uANStYKoB7inj4N1UX6WHtKRP94n70FY"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="text-center space-y-2 mb-4 flex-1">
+<h3 class="font-headline font-bold text-lg text-stone-900">The Alchemist Chrono</h3>
+<div class="flex justify-center text-amber-500">
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+</div>
+<p class="font-sans font-bold text-stone-900">$12,400.00</p>
+</div>
+<button class="w-full py-4 border border-stone-200 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300">Add to Cart</button>
+</div>
+<!-- Product Card 2 -->
+<div class="group flex flex-col">
+<div class="relative aspect-square bg-[#f5f6f8] rounded-2xl overflow-hidden mb-6">
+<img alt="Aura V3 Headphones" class="w-full h-full object-cover p-8 group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoHA3TQNIbycIE-SZos2MzAn0A-X4hbxRwjnQkZWVT5MRc4wU3kpomd37XQ6Zj4yS73u02uOiZlpwYtY_j8GMnT4068FgAG66J4NBGW6-MS56xQ1LQq04e41ZMHEiAnNNItHosp31NeY0q8SHwu0HZtmyzELDv75-djD5QghL2PiG6YOdFJYgzTzjFqXZ4YJs6GJoDfel1lKES0CI_N9h0VAwXx7l7INf_viuuQL57wd45cnZ6XBvnOf3v6qgRbz3d6zkvcK09CrA"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="text-center space-y-2 mb-4 flex-1">
+<h3 class="font-headline font-bold text-lg text-stone-900">Aura V3 Headphones</h3>
+<div class="flex justify-center text-amber-500">
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+</div>
+<p class="font-sans font-bold text-stone-900">$2,850.00</p>
+</div>
+<button class="w-full py-4 border border-stone-200 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300">Add to Cart</button>
+</div>
+<!-- Product Card 3 -->
+<div class="group flex flex-col">
+<div class="relative aspect-square bg-[#f5f6f8] rounded-2xl overflow-hidden mb-6">
+<img alt="Emerald Horizon" class="w-full h-full object-cover p-8 group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCurulL8HhUPcVCXb7jbtYHalpil85Ye6cVpXIl9yqRE-XbeClYyHGuEcob9Xv1zxzlhbqHaiKCR84FvCk-L_2SKASGvULvkX70lZYw68hkRw_t5c5kZ7AiM9x6fMycmeqv9XWg7wrgxs7qAxorPcdOe-gYwnbdDSDZSe5WrHVcLSXmvyHVQ74GuoxyijYHShbR5UvhyfYwBUzHkhtZsQvAJ2vHxsklL_QT2nzjqunuuL_RVDofq4MAZx5a-tmeqZwQ6KnEMI9gRPE"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="text-center space-y-2 mb-4 flex-1">
+<h3 class="font-headline font-bold text-lg text-stone-900">Emerald Horizon</h3>
+<div class="flex justify-center text-amber-500">
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+</div>
+<p class="font-sans font-bold text-stone-900">$45,000.00</p>
+</div>
+<button class="w-full py-4 border border-stone-200 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300">Add to Cart</button>
+</div>
+<!-- Product Card 4 -->
+<div class="group flex flex-col">
+<div class="relative aspect-square bg-[#f5f6f8] rounded-2xl overflow-hidden mb-6">
+<img alt="The Solitaire No. 1" class="w-full h-full object-cover p-8 group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKPQqDrP1aXG0bbtUEDMcCEIpS0csHxKXmyqStv66nM_n9crWNnufLqJA18S0XZnHKnCnYWZUJOxAU8a_Jn8gf_8OME2hSMC221t87OZrQQjcv88ZAcLJH7PjDd6QgiMZ3D8D7V2RrbErh5nkCGMi3a86DzVcZhJyvIVvnOUQ-JtioKwLp2zzrBe1OjLcmbKU7YqFaDHz8OyIfUE3YyzZmJRk6wC8Sn5CajpQWxCm2i2fpA-Y5YJIJ8nPTBEEkrHLiDa6-41SQl6w"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="text-center space-y-2 mb-4 flex-1">
+<h3 class="font-headline font-bold text-lg text-stone-900">The Solitaire No. 1</h3>
+<div class="flex justify-center text-amber-500">
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+</div>
+<p class="font-sans font-bold text-stone-900">$8,900.00</p>
+</div>
+<button class="w-full py-4 border border-stone-200 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300">Add to Cart</button>
+</div>
+<!-- Product Card 5 -->
+<div class="group flex flex-col">
+<div class="relative aspect-square bg-[#f5f6f8] rounded-2xl overflow-hidden mb-6">
+<img alt="Observer Frames" class="w-full h-full object-cover p-8 group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCp_DOilbmBiePGFqfgS4kI_MqFZHfrvQRZM9Ya-4utlLEf2HmakQBvrcUuYnJDdu_TWCRqRAKoo3zp3X_L6fWyin06sn6QwTMKpkt2fvUZEqwZ5haa_HK4-eLVHbuKK0fryVJxziVLbgjTj8ee_Zr4Mj3O2JUyZk-X41misdx05CcO54gEskwG-C8qe1mOm5Tj042GApoOPL7DU_JK7_v1RKOvLkgSO6KB96Ys9-mWTRGlOKjRMtAvXdlMo15XH10p4zv9Z_8eYxw"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="text-center space-y-2 mb-4 flex-1">
+<h3 class="font-headline font-bold text-lg text-stone-900">Observer Frames</h3>
+<div class="flex justify-center text-amber-500">
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+</div>
+<p class="font-sans font-bold text-stone-900">$1,200.00</p>
+</div>
+<button class="w-full py-4 border border-stone-200 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300">Add to Cart</button>
+</div>
+<!-- Product Card 6 -->
+<div class="group flex flex-col">
+<div class="relative aspect-square bg-[#f5f6f8] rounded-2xl overflow-hidden mb-6">
+<img alt="Vintage Heirloom" class="w-full h-full object-cover p-8 group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDV_FHVPbNWMrA0I51UOqxyl9jGsHsoKVzQBr3HiGgJJGBdZkHJasPMYq-851L7eraq3karjdKAZmozXNB0Qw3tBtqlKNQ5xVaKbJAHUGJ2Rcl41MqWL-q7ePdD6ObnDPo-TX2PD__52oDoVwd2AetPWI9uyCUnMMYRRo5eM9J1FcbQZfHvXSf2xqd0eVnx9u8JUL8aublIbt4O7Rr3ucXG3jqOJkVgqxRqLCyAAil-cR7NF0UN60Vsnl8L5dBqsPlGEYTFfoq0bZk"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="text-center space-y-2 mb-4 flex-1">
+<h3 class="font-headline font-bold text-lg text-stone-900">Vintage Heirloom</h3>
+<div class="flex justify-center text-amber-500">
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+</div>
+<p class="font-sans font-bold text-stone-900">$32,000.00</p>
+</div>
+<button class="w-full py-4 border border-stone-200 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300">Add to Cart</button>
+</div>
+</div>
+<!-- Pagination / Load More -->
+<div class="mt-20 flex justify-center">
+<button class="px-12 py-4 bg-stone-900 text-white rounded-xl font-bold text-xs uppercase tracking-[0.2em] hover:bg-black transition-colors">View More Collections</button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

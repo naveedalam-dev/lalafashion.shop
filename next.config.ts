@@ -16,8 +16,16 @@ const nextConfig = {
 
   // ── Image optimisation ─────────────────────────────────────────────────────
   images: {
-    unoptimized: true,
-    remotePatterns: [],
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60 * 60 * 24 * 7, // 7 days
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
 
   // ── Permanent redirects (edge-level, before any page renders) ─────────────
@@ -35,7 +43,7 @@ const nextConfig = {
       { source: '/home',                  destination: '/',                  permanent: true },
       { source: '/index',                 destination: '/',                  permanent: true },
       { source: '/index.html',            destination: '/',                  permanent: true },
-      { source: '/shop',                  destination: '/category/all',      permanent: true },
+      { source: '/category/all',          destination: '/shop',              permanent: true },
       { source: '/faq',                   destination: '/faqs',              permanent: true },
       { source: '/policy',                destination: '/privacy-policy',    permanent: true },
       { source: '/data-privacy',          destination: '/data-policy',       permanent: true },
@@ -55,16 +63,7 @@ const nextConfig = {
   async headers() {
     return [
       ...configHeader,
-      // Canonical domain header — helps CDNs & crawlers
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'Link',
-            value: `<${PRIMARY_DOMAIN}/:path*>; rel="canonical"`,
-          },
-        ],
-      },
+      // Security/cache handled by configHeader already
       // Never cache admin pages
       {
         source: '/admin-login/:path*',

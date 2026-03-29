@@ -14,7 +14,7 @@ export async function revalidateProducts() {
  * Revalidate search-related caches
  */
 export async function revalidateSearch() {
-  revalidatePath("/search", "page");
+  revalidatePath("/shop", "page");
 }
 
 /**
@@ -28,7 +28,7 @@ export async function revalidateProductPage(productId: string) {
  * Revalidate search page
  */
 export async function revalidateSearchPage() {
-  revalidatePath("/search", "page");
+  revalidatePath("/shop", "page");
 }
 
 /**

@@ -112,13 +112,14 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const orderNumber = searchParams.get("order_number");
+  const contact = searchParams.get("contact");
 
-  if (!orderNumber) {
-    return NextResponse.json({ error: "order_number is required" }, { status: 400 });
+  if (!orderNumber && !contact) {
+    return NextResponse.json({ error: "order_number or contact is required" }, { status: 400 });
   }
 
   try {
-    const { data: order, error } = await supabase
+    let query = supabase
       .from("orders")
       .select(
         `
@@ -145,8 +146,21 @@ export async function GET(req: NextRequest) {
           )
         )
       `
-      )
-      .eq("order_number", orderNumber)
+      );
+
+    if (orderNumber && contact) {
+      // Find orders matching order_number OR contact_phone
+      query = query.or(`order_number.eq.${orderNumber},contact_phone.eq.${contact}`);
+    } else if (orderNumber) {
+      query = query.eq("order_number", orderNumber);
+    } else {
+      query = query.eq("contact_phone", contact);
+    }
+
+    // Get the latest order if multiple exist
+    const { data: order, error } = await query
+      .order("created_at", { ascending: false })
+      .limit(1)
       .maybeSingle();
 
     if (error) {

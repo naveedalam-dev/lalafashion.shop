@@ -4,7 +4,7 @@ import { gql } from "@apollo/client";
  * Create a product review
  * @param input - Review input data
  */
-export const CREATE_PRODUCT_REVIEW = gql`
+export const CREATE_PRODUCT_REVIEW_MUTATION = gql`
   mutation CreateProductReview($input: createProductReviewInput!) {
     createProductReview(input: $input) {
       productReview {

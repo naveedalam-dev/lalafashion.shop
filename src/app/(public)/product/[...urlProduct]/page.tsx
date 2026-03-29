@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import {
   ProductDetailSkeleton,
   RelatedProductSkeleton,
@@ -27,6 +28,49 @@ import { HeroCarouselShimmer } from "@components/common/slider";
 
 const productCache = new LRUCache<ProductNode>(100, 10);
 export const dynamic = "force-dynamic";
+
+// ─── CANONICAL METADATA ───────────────────────────────────────────────────────
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ urlProduct: string[] }>;
+}): Promise<Metadata> {
+  const { urlProduct } = await params;
+  const slug = urlProduct.join("/");
+  const supabase = await createClient();
+
+  const { data: product } = await supabase
+    .from("products")
+    .select("name, description, image_url, slug")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  const title       = product?.name       ? `${product.name} | LALA Fashion`       : "Product | LALA Fashion";
+  const description = product?.description ? product.description.substring(0, 160) : "Shop premium fashion at LALA Fashion.";
+  const image       = product?.image_url  || "https://www.lalafashion.store/Logo.png";
+  const canonical   = `https://www.lalafashion.store/product/${slug}`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: "LALA Fashion",
+      type: "website",
+      images: [{ url: image, width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+  };
+}
+
 
 export interface SingleProductResponse {
   product: ProductNode;
@@ -106,14 +150,53 @@ export default async function ProductPage({
   const product = await getSingleProduct(fullPath);
   if (!product) return notFound();
 
+  const canonical = `https://www.lalafashion.store/product/${fullPath}`;
   const imageUrl = getImageUrl(product?.baseImageUrl, baseUrl, NOT_IMAGE);
-  const productJsonLd = {
-    "@context": BASE_SCHEMA_URL,
-    "@type": PRODUCT_TYPE,
+  const productPrice = (product as any).minimumPrice || (product as any).price || 0;
+  const isAvailable = (product as any).stock_status !== 'OUT_OF_STOCK' &&
+    (product as any).stock_status !== 'out_of_stock';
+
+  const productJsonLd: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Product",
     name: product?.name,
-    description: product?.description,
+    description: product?.description || undefined,
     sku: product?.sku,
+    image: imageUrl || undefined,
+    url: canonical,
+    brand: {
+      "@type": "Brand",
+      name: "LALA Fashion",
+    },
+    offers: {
+      "@type": "Offer",
+      url: canonical,
+      priceCurrency: "PKR",
+      price: productPrice,
+      priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      availability: isAvailable
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      seller: {
+        "@type": "Organization",
+        name: "LALA Fashion",
+        url: "https://www.lalafashion.store",
+      },
+    },
   };
+
+  // Add aggregateRating only if reviews exist
+  const rawRating = (product as any).rating || 0;
+  const rawReviewCount = (product as any).reviewCount || 0;
+  if (rawReviewCount > 0 && rawRating > 0) {
+    productJsonLd.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: rawRating.toFixed(1),
+      reviewCount: rawReviewCount,
+      bestRating: 5,
+      worstRating: 1,
+    };
+  }
 
   const reviews = Array.isArray(product?.reviews?.edges)
     ? product?.reviews.edges.map((e) => e.node)

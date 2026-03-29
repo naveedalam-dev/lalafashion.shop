@@ -1,14 +1,14 @@
 "use client";
 
 import { useMutation } from "@apollo/client";
-import { CREATE_PRODUCT_REVIEW } from "@/graphql";
+import { CREATE_PRODUCT_REVIEW_MUTATION } from "@/graphql";
 import { useCustomToast } from "./useToast";
 import { CreateProductReviewInput, ProductReviewResponse } from "@/types/review";
 
 export function useProductReview() {
     const { showToast } = useCustomToast();
 
-    const [mutateAsync, { loading: isLoading, error }] = useMutation<ProductReviewResponse>(CREATE_PRODUCT_REVIEW, {
+    const [mutateAsync, { loading: isLoading, error }] = useMutation<ProductReviewResponse>(CREATE_PRODUCT_REVIEW_MUTATION, {
         onCompleted: (response) => {
             const responseData = response?.createProductReview;
             if (responseData) {

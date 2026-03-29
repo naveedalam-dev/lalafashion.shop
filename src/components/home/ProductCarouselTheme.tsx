@@ -1,4 +1,4 @@
-import { ProductCard } from "@components/catalog/product/ProductCard";
+import ProductCard from "@components/catalog/product/ProductCard";
 import { ProductsSectionProps } from "@components/catalog/type";
 import { baseUrl, getImageUrl, NOT_IMAGE } from "@utils/constants";
 

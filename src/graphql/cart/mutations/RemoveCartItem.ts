@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const REMOVE_CART_ITEM = gql`
+export const REMOVE_CART_ITEM_MUTATION = gql`
   mutation RemoveCartItem(
     $cartItemId: Int!
   ) {

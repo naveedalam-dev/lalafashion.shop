@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const CREATE_CART_TOKEN = gql`
+export const CREATE_CART_TOKEN_MUTATION = gql`
   mutation CreateCart {
     createCartToken(input: {}) {
       cartToken {

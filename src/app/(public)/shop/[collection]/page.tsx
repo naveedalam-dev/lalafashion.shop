@@ -43,10 +43,23 @@ export async function generateMetadata({
   if (!categoryItem) return notFound();
 
   const translation = categoryItem.translation;
+  const title = translation?.metaTitle || translation?.name || "Collection | LALA Fashion";
+  const description = translation?.description || `Shop our ${translation?.name || 'collection'} — premium women\'s fashion at LALA Fashion.`;
+  const canonical = `https://www.lalafashion.store/shop/${categorySlug}`;
 
   return {
-    title: translation?.metaTitle || translation?.name,
-    description: translation?.description || `${translation?.name} products`,
+    title,
+    description,
+    alternates: { canonical },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: "LALA Fashion",
+      type: "website",
+      images: [{ url: "https://www.lalafashion.store/Logo.png", width: 1200, height: 630 }],
+    },
   };
 }
 
@@ -135,7 +148,7 @@ export default async function CategoryPage({
           />
         </Suspense>
         <div className="my-10 hidden gap-4 md:flex md:items-baseline md:justify-between w-full max-w-screen-2xl mx-auto px-4">
-          <FilterList filterAttributes={filterAttributes} />
+          <FilterList filterAttributes={filterAttributes} categories={[]} />
           <SortOrder sortOrders={SortByFields} title="Sort by" />
         </div>
         <div className="flex items-center justify-between gap-4 py-8 md:hidden w-full max-w-screen-2xl mx-auto px-4">

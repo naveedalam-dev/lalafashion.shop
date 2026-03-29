@@ -13,13 +13,17 @@ export default function AddToCartButton({
   productUrlKey,
   productId,
   isSaleable,
-  fallbackStockStatus
+  fallbackStockStatus,
+  className,
+  showLabel,
 }: {
   productType?: string;
   productId: string;
   productUrlKey: string;
   isSaleable?: string;
   fallbackStockStatus?: boolean;
+  className?: string;
+  showLabel?: boolean;
 }) {
   const checkIsSaleable = () => {
     if (fallbackStockStatus === true) return "1";
@@ -46,7 +50,7 @@ export default function AddToCartButton({
   };
 
   const buttonClasses =
-    " flex w-full cursor-pointer items-center  justify-center px-4 rounded-full min-h-8  tracking-wide ";
+    className || " flex w-full cursor-pointer items-center  justify-center px-4 rounded-full min-h-8  tracking-wide ";
   const disabledClasses = "cursor-wait opacity-60 hover:opacity-60";
 
   return productType !== "simple" ? (
@@ -61,7 +65,7 @@ export default function AddToCartButton({
       href={`/product/${productUrlKey}`}
       type="submit"
     >
-      <ShoppingCartIcon className="size-6 -rotate-6 stroke-black stroke-[1.5]" />
+      {showLabel ? "View Product" : <ShoppingCartIcon className="size-6 -rotate-6 stroke-black stroke-[1.5]" />}
     </Link>
   ) : (
     <button
@@ -75,9 +79,9 @@ export default function AddToCartButton({
       onClick={handleAddToCart}
     >
       {isCartLoading ? (
-        <LoadingDots className="bg-black" />
+        <LoadingDots className="bg-black text-white" />
       ) : (
-        <ShoppingCartIcon className="size-6 -rotate-6 stroke-black stroke-[1.5]" />
+        showLabel ? "Add to Cart" : <ShoppingCartIcon className="size-6 -rotate-6 stroke-black stroke-[1.5]" />
       )}
     </button>
   );

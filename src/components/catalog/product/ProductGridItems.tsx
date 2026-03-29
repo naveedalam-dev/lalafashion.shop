@@ -1,5 +1,5 @@
 import { baseUrl, getImageUrl, NOT_IMAGE } from "@/utils/constants";
-import { ProductCard } from "./ProductCard";
+import ProductCard from "./ProductCard";
 
 export default function ProductGridItems({
   products,

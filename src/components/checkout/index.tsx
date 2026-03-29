@@ -20,6 +20,7 @@ const S = {
     borderRadius: "16px",
     boxShadow: "0 1px 8px rgba(0,0,0,0.08)",
     padding: "32px",
+    boxSizing: "border-box",
   } as React.CSSProperties,
   iconBox: (size = 40) =>
   ({
@@ -464,7 +465,7 @@ export default function CheckOut({ step }: { step?: string }) {
   });
 
   return (
-    <div style={{ background: "#F8FAFC", minHeight: "100vh", paddingTop: "40px", paddingBottom: "60px", fontFamily: "'Segoe UI', system-ui, sans-serif" }}>
+    <div style={{ background: "#F8FAFC", minHeight: "100vh", paddingTop: "40px", paddingBottom: "120px", fontFamily: "'Segoe UI', system-ui, sans-serif" }}>
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 20px" }}>
 
         {/* Header */}
@@ -510,10 +511,15 @@ export default function CheckOut({ step }: { step?: string }) {
 
         {/* Two-column layout */}
         <div style={{ display: "flex", gap: "24px", alignItems: "flex-start", marginTop: "30px" }} className="checkout-cols">
-          <style dangerouslySetInnerHTML={{ __html: `@media(max-width:768px){.checkout-cols{flex-direction:column!important;}}` }} />
+          <style dangerouslySetInnerHTML={{ __html: `
+            @media(max-width:768px){
+              .checkout-cols{flex-direction:column!important; gap: 20px!important; align-items: stretch!important; width: 100%!important;}
+              .checkout-card{flex: none!important; width: 100%!important; max-width: 100%!important; margin: 0!important; padding: 24px!important; box-sizing: border-box!important; position: static!important;}
+            }
+          ` }} />
 
           {/* ══════════════ LEFT CARD ══════════════ */}
-          <div style={{ flex: "1.2", ...S.card }}>
+          <div style={{ flex: "1", ...S.card }} className="checkout-card">
 
             {/* ── STEP 1 — Shipping ── */}
             {currentStep === 1 && (
@@ -735,7 +741,7 @@ export default function CheckOut({ step }: { step?: string }) {
           </div>
 
           {/* ══════════════ RIGHT CARD — Order Summary ══════════════ */}
-          <div style={{ flex: "0.9", ...S.card, padding: "28px", position: "sticky", top: "100px" }}>
+          <div style={{ flex: "1", ...S.card, position: "sticky", top: "100px", maxHeight: "calc(100vh - 120px)", overflowY: "auto" }} className="checkout-card">
             <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "20px" }}>
               <div style={S.iconBox(36)}><IconClipboard /></div>
               <span style={{ fontSize: "18px", fontWeight: 700, color: "#111827" }}>Order Summary</span>
@@ -783,7 +789,7 @@ export default function CheckOut({ step }: { step?: string }) {
               })}
               {cartItems.length === 0 && (
                 <div style={{ padding: "20px", textAlign: "center", color: "#9ca3af", fontSize: "14px" }}>
-                  Your cart is empty. <Link href="/products" style={{ color: "#2563EB" }}>Shop now</Link>
+                  Your cart is empty. <Link href="/shop" style={{ color: "#2563EB" }}>Shop now</Link>
                 </div>
               )}
             </div>

@@ -1,20 +1,11 @@
 import { gql } from "@apollo/client";
 
-export const UPDATE_CART_ITEM = gql
-  `
-  mutation UpdateCartItem(
-    $cartItemId: Int!
-    $quantity: Int!
-  ) {
-    createUpdateCartItem(
-      input: {
-        cartItemId: $cartItemId
-        quantity: $quantity
-      }
-    ) {
+export const UPDATE_CART_ITEM_MUTATION = gql`
+  mutation UpdateCartItem($cartItemId: Int!, $quantity: Int!) {
+    createUpdateCartItem(input: { cartItemId: $cartItemId, quantity: $quantity }) {
       updateCartItem {
         id
-         taxAmount
+        taxAmount
         shippingAmount
         subtotal
         grandTotal
@@ -25,8 +16,8 @@ export const UPDATE_CART_ITEM = gql
               cartId
               productId
               name
-               price
-               baseImage
+              price
+              baseImage
               sku
               quantity
               type
@@ -35,7 +26,7 @@ export const UPDATE_CART_ITEM = gql
             }
           }
         }
-          itemsQty
+        itemsQty
         grandTotal
       }
     }

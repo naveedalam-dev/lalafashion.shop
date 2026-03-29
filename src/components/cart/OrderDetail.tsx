@@ -70,7 +70,7 @@ export default function OrderDetail() {
         <p className="text-lg text-slate-700 font-semibold mb-6">
           Your order has been placed successfully!
         </p>
-        <Link href="/products" className="inline-flex items-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20">
+        <Link href="/shop" className="inline-flex items-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20">
           Continue Shopping <ExternalLink size={18} />
         </Link>
       </div>
@@ -160,13 +160,13 @@ export default function OrderDetail() {
       {/* Action Buttons */}
       <div className="grid grid-cols-2 gap-4">
         <Link 
-          href={`/customer/orders`} 
+          href="/track-order"
           className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-blue-500/20 text-sm flex items-center justify-center gap-2"
         >
           Track Order
         </Link>
         <Link 
-          href="/support"
+          href="/contact"
           className="bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#475569] font-bold py-4 rounded-xl transition-all text-sm flex items-center justify-center gap-2"
         >
           Contact Support

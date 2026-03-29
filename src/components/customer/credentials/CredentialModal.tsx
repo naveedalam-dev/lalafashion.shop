@@ -23,7 +23,7 @@ import { clearCart } from "@/store/slices/cart-slice";
 import { EMAIL, removeFromLocalStorage } from "@/store/local-storage";
 
 
-export default function CredentialModal({
+export function CredentialModal({
   children,
   className,
   onOpen,

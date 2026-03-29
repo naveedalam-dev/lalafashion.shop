@@ -37,10 +37,27 @@ export async function generateMetadata({
     .eq('slug', slug)
     .single();
 
-  return generateMetadataForPage(`category/${slug}`, {
-    title: category?.name || "Category",
-    description: category?.description || `Explore our ${category?.name || 'category'} collection`,
-  });
+  const title = category?.name
+    ? `${category.name} | LALA Fashion`
+    : `Collection | LALA Fashion`;
+  const description = category?.description
+    || `Explore our ${category?.name || 'collection'} — premium women's fashion at LALA Fashion.`;
+  const canonical = `https://www.lalafashion.store/category/${slug}`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: 'LALA Fashion',
+      type: 'website',
+      images: [{ url: 'https://www.lalafashion.store/Logo.png', width: 1200, height: 630 }],
+    },
+  };
 }
 
 export default async function CategoryPage({
@@ -168,7 +185,7 @@ export default async function CategoryPage({
       </div>
 
       <div className="my-10 hidden gap-4 md:flex md:items-baseline md:justify-between w-full mx-auto max-w-screen-2xl px-4 xss:px-7.5">
-        <FilterList filterAttributes={filterAttributes} />
+        <FilterList filterAttributes={filterAttributes} categories={[]} />
         <SortOrder sortOrders={SortByFields} title="Sort by" />
       </div>
 

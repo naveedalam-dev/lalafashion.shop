@@ -6,11 +6,26 @@ import Image from "next/image";
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 function normalizeOrderId(raw: string): string {
-  let id = raw.trim().replace(/^#+/, ""); // remove leading #
-  if (!id.toUpperCase().startsWith("ORD-")) {
-    id = "ORD-" + id;
+  // 1. Remove all whitespace and common prefixes/symbols
+  let cleaned = raw.trim().toUpperCase();
+  
+  // Remove leading # if present
+  cleaned = cleaned.replace(/^#+/, "");
+  
+  // Handle full formats like #ST-ORD-123456 or ST-ORD-123456
+  // Extract just the numeric part if it looks like ST-ORD-XXXXXX
+  const ordMatch = cleaned.match(/(?:ST-)?ORD-(\d+)/i);
+  if (ordMatch && ordMatch[1]) {
+    return "ORD-" + ordMatch[1];
   }
-  return id.toUpperCase();
+
+  // If it's just numbers (e.g. 879386 or #879386 which became 879386)
+  if (/^\d+$/.test(cleaned)) {
+    return "ORD-" + cleaned;
+  }
+
+  // Return as-is for other cases (like phone numbers) to let API decide
+  return cleaned;
 }
 
 const STATUS_STEPS = [
@@ -58,10 +73,11 @@ export default function TrackOrderForm() {
     setOrder(null);
 
     const normalized = normalizeOrderId(inputValue);
+    const original = inputValue.trim();
 
     try {
       const res = await fetch(
-        `/api/orders?order_number=${encodeURIComponent(normalized)}`
+        `/api/orders?order_number=${encodeURIComponent(normalized)}&contact=${encodeURIComponent(original)}`
       );
       const data = await res.json();
 

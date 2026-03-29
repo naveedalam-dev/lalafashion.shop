@@ -13,11 +13,11 @@ import { useGuestCartToken } from "./useGuestCartToken";
 import { ORDER_ID, IS_GUEST } from "@utils/constants";
 import { useCartDetail } from "./useCartDetail";
 import {
-  CREATE_CHECKOUT_ADDRESS,
-  CREATE_CHECKOUT_ORDER,
-  CREATE_CHECKOUT_PAYMENT_METHODS,
-  CREATE_CHECKOUT_SHIPPING_METHODS,
-  GET_CHECKOUT_ADDRESSES,
+  CREATE_CHECKOUT_ADDRESS_MUTATION,
+  CREATE_CHECKOUT_ORDER_MUTATION,
+  CREATE_CHECKOUT_PAYMENT_METHOD_MUTATION,
+  CREATE_CHECKOUT_SHIPPING_METHODS_MUTATION,
+  GET_CHECKOUT_ADDRESSES_QUERY,
 } from "@/graphql";
 
 export const useCheckout = () => {
@@ -33,9 +33,9 @@ export const useCheckout = () => {
   };
 
   const [saveAddressToCheckout, { loading: isLoadingToSave }] = useMutation(
-    CREATE_CHECKOUT_ADDRESS,
+    CREATE_CHECKOUT_ADDRESS_MUTATION,
     {
-      refetchQueries: [{ query: GET_CHECKOUT_ADDRESSES }],
+      refetchQueries: [{ query: GET_CHECKOUT_ADDRESSES_QUERY }],
       awaitRefetchQueries: true,
       onCompleted: () => {
         showToast("Address saved successfully", "success");
@@ -56,7 +56,7 @@ export const useCheckout = () => {
   };
 
   const [saveShipping, { loading: isSaving }] = useMutation(
-    CREATE_CHECKOUT_SHIPPING_METHODS,
+    CREATE_CHECKOUT_SHIPPING_METHODS_MUTATION,
     {
       onCompleted: (response) => {
         const responseData =
@@ -87,7 +87,7 @@ export const useCheckout = () => {
   };
 
   const [savePayment, { loading: isPaymentLoading }] = useMutation(
-    CREATE_CHECKOUT_PAYMENT_METHODS,
+    CREATE_CHECKOUT_PAYMENT_METHOD_MUTATION,
     {
       onCompleted: (response) => {
         const responseData =
@@ -117,7 +117,7 @@ export const useCheckout = () => {
   };
 
   const [placeOrder, { loading: isPlaceOrder }] = useMutation(
-    CREATE_CHECKOUT_ORDER,
+    CREATE_CHECKOUT_ORDER_MUTATION,
     {
       onCompleted: async (response) => {
         const responseData = response?.createCheckoutOrder?.checkoutOrder;

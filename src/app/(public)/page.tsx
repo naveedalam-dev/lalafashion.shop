@@ -3,8 +3,32 @@ import ImageCarousel from "@components/home/ImageCarousel";
 import ProductCarousel from "@components/home/ProductCarousel";
 import CategoryCarousel from "@components/home/CategoryCarousel";
 import { MobileSearchBar } from "@components/layout/navbar/MobileSearch";
+import type { Metadata } from "next";
 
 export const revalidate = 0; // Dynamic fetch
+
+// ─── CANONICAL: "/" is the ONE AND ONLY home address ───────────────────────
+export const metadata: Metadata = {
+  title: "LALA Fashion — Modern Lifestyle Store in Pakistan",
+  description: "Modern Lifestyle — Shop premium watches, stylish glasses, exquisite jewellery, and latest electronics. Fast delivery across Pakistan.",
+  alternates: {
+    canonical: "https://www.lalafashion.store",
+  },
+  openGraph: {
+    title: "LALA Fashion — Modern Lifestyle",
+    description: "Modern Lifestyle — Shop high-quality watches, stylish glasses, exquisite jewellery, and the latest electronics.",
+    url: "https://www.lalafashion.store",
+    siteName: "LALA Fashion",
+    type: "website",
+    images: [{ url: "https://www.lalafashion.store/og-image.png", width: 1200, height: 630, alt: "LALA Fashion" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "LALA Fashion — Modern Lifestyle Store",
+    description: "Modern Lifestyle — Pakistan's premium destination for watches, glasses, and electronics.",
+    images: ["https://www.lalafashion.store/og-image.png"],
+  },
+};
 
 export default async function Home() {
   const supabase = await createClient();

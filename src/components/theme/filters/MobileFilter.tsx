@@ -86,14 +86,14 @@ export default function MobileFilter({
 
   return (
     <>
-      <div className="flex flex-wrap gap-3">
+      <div className="w-full">
         <Button
-          size="md"
-          className="flex bg-neutral-100 capitalize dark:bg-neutral-800"
+          size="lg"
+          className="w-full bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 font-headline font-bold uppercase tracking-widest text-xs h-14 rounded-xl"
           onPress={() => onOpen()}
         >
-          <AdjustmentsHorizontalIcon className="h-6 w-8 fill-none stroke-black dark:stroke-white" />{" "}
-          <span className="font-outfit text-base tracking-wide">Filter</span>
+          <span className="material-symbols-outlined mr-2">tune</span>
+          Filter & Refine
         </Button>
       </div>
 
@@ -106,78 +106,65 @@ export default function MobileFilter({
         <DrawerContent className="rounded-t-[32px] dark:bg-neutral-900">
           {(_onClose) => (
             <>
-              <DrawerHeader className="flex flex-col gap-1 pb-4 pt-2">
-                <div className="mx-auto h-1 w-10 rounded-full bg-neutral-300 dark:bg-neutral-700" />
-                <div className="flex items-center justify-between mt-2 px-2">
-                  <h2 className="text-2xl font-bold tracking-tight">Filters</h2>
-                  <div className="flex items-center gap-4">
-                    {Array.from(searchParams.keys()).some(
-                      (key) => key !== QUERY && key !== SORT
-                    ) && (
-                        <button
-                          onClick={clearAllFilters}
-                          className="text-sm font-medium underline underline-offset-4 text-neutral-600 dark:text-neutral-400"
-                        >
-                          Clear all filters
-                        </button>
-                      )}
-                    <Button
-                      color="primary"
-                      radius="full"
-                      size="md"
-                      className="px-6 font-semibold"
-                      onPress={applyFilters}
-                    >
-                      Apply Filter
-                    </Button>
-                  </div>
+              <DrawerHeader className="flex flex-col gap-1 pb-4 pt-4 border-b border-stone-100 dark:border-stone-800">
+                <div className="mx-auto h-1.5 w-12 rounded-full bg-stone-200 dark:bg-stone-700 mb-4" />
+                <div className="flex items-center justify-between px-2">
+                  <h2 className="text-xl font-headline font-bold text-stone-900 dark:text-stone-100 uppercase tracking-tight">Filter & Refine</h2>
+                  <button
+                    onClick={onOpenChange}
+                    className="material-symbols-outlined text-stone-400 hover:text-stone-900 dark:hover:text-stone-100"
+                  >
+                    close
+                  </button>
                 </div>
               </DrawerHeader>
-              <DrawerBody className="px-6 pb-12 pt-2">
-                <div className="flex flex-col gap-6">
+              <DrawerBody className="px-6 py-8 overflow-y-auto max-h-[70vh]">
+                <div className="flex flex-col gap-10">
                   {filterAttributes?.map((attr: any) => (
-                    <div key={attr.id} className="flex flex-col gap-2">
-                      <p className="text-lg font-semibold text-neutral-800 dark:text-neutral-200">
-                        Select {formatLabel(attr.adminName)}
+                    <div key={attr.id} className="flex flex-col gap-4">
+                      <p className="font-headline font-bold text-xs uppercase tracking-widest text-stone-400">
+                        {attr.adminName}
                       </p>
-                      <Select
-                        isMultiline
-                        items={attr.options}
-                        aria-label={`Select ${attr.adminName}`}
-                        placeholder={`All ${formatLabel(attr.adminName)}s`}
-                        selectedKeys={tempFilters[attr.code] || new Set()}
-                        selectionMode="multiple"
-                        variant="flat"
-                        size="lg"
-                        classNames={{
-                          value: "text-neutral-800 dark:text-neutral-200",
-                          trigger: "dark:bg-neutral-800",
-                        }}
-                        onSelectionChange={(keys) =>
-                          handleFilterChange(attr.code, keys as Set<string>)
-                        }
-                        renderValue={(items) => (
-                          <div className="flex items-center gap-2 overflow-x-auto pb-1.5 pt-1">
-                            {items.map((item) => (
-                              <p className="text-nowrap text-neutral-800 dark:text-neutral-200" key={item.key}>
-                                {item.data?.adminName}
-                              </p>
-                            ))}
-                          </div>
-                        )}
-                      >
-                        {(option: any) => (
-                          <SelectItem
-                            key={option.id}
-                            textValue={option.adminName}
-                            className="text-neutral-800 dark:text-neutral-200"
-                          >
-                            {option.adminName}
-                          </SelectItem>
-                        )}
-                      </Select>
+                      <div className="grid grid-cols-2 gap-3">
+                        {attr.options?.map((option: any) => {
+                          const isSelected = tempFilters[attr.code]?.has(option.id);
+                          return (
+                            <button
+                              key={option.id}
+                              onClick={() => {
+                                const newSet = new Set(tempFilters[attr.code] || []);
+                                if (newSet.has(option.id)) newSet.delete(option.id);
+                                else newSet.add(option.id);
+                                handleFilterChange(attr.code, newSet);
+                              }}
+                              className={`py-3 px-4 rounded-xl border text-sm font-body transition-all text-left ${
+                                isSelected 
+                                  ? 'bg-stone-900 border-stone-900 text-white dark:bg-white dark:border-white dark:text-stone-900 shadow-lg' 
+                                  : 'border-stone-100 bg-stone-50 text-stone-600 dark:bg-stone-800/50 dark:border-stone-800 dark:text-stone-400'
+                              }`}
+                            >
+                              {option.adminName}
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
                   ))}
+                </div>
+                
+                <div className="mt-12 flex flex-col gap-4">
+                  <Button
+                    className="w-full bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 font-headline font-bold uppercase tracking-widest text-xs h-14 rounded-xl"
+                    onPress={applyFilters}
+                  >
+                    Show Results
+                  </Button>
+                  <button
+                    onClick={clearAllFilters}
+                    className="w-full py-2 text-xs uppercase tracking-widest font-bold text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 transition-colors"
+                  >
+                    Reset All
+                  </button>
                 </div>
               </DrawerBody>
             </>

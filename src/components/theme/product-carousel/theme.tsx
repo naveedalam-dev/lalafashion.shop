@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { NOT_IMAGE } from "@/utils/constants";
-import { ProductCard } from "@/components/catalog/product/ProductCard";
+import ProductCard from "@components/catalog/product/ProductCard";
 import { BagistoProductInfo } from "@/types/types";
 
 const Theme: FC<{

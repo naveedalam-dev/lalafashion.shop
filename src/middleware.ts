@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 
 // ─── LEGACY URL MAP (old path → new path, permanent 308) ────────────────────
 // Add any routes that ever changed here to preserve SEO equity forever.
@@ -8,7 +9,7 @@ const LEGACY_REDIRECTS: Record<string, string> = {
   '/home':                  '/',
   '/index':                 '/',
   '/index.html':            '/',
-  '/shop':                  '/category/all',
+  '/category/all':          '/shop',
   '/faq':                   '/faqs',
   '/faq/':                  '/faqs',
   '/policy':                '/privacy-policy',
@@ -29,14 +30,27 @@ const NOINDEX_PREFIXES = [
   '/admin-login',
   '/api',
   '/_next',
-  '/search',
   '/checkout',
   '/success',
 ];
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const url      = request.nextUrl.clone();
   const pathname = url.pathname;
+
+  // ── 0. Auth: redirect logged in users from /customer/login or /customer/register ──
+  const restrictedPaths = ['/customer/login', '/customer/register'];
+  if (restrictedPaths.some((path) => pathname.startsWith(path))) {
+    const token = await getToken({
+      req: request,
+      secret: process.env.NEXT_PUBLIC_NEXT_AUTH_SECRET
+    });
+
+    if (token) {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+  }
+
 
   // ── 1. Remove trailing slash (except root "/") ────────────────────────────
   if (pathname !== '/' && pathname.endsWith('/')) {

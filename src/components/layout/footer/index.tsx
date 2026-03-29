@@ -49,7 +49,7 @@ export default async function Footer() {
               <Link href="/" aria-label="Go to homepage">
                 <LogoIcon />
               </Link>
-              <p className="text-sm/6 text-neutral-600 dark:text-neutral-400 max-w-96 transition-colors duration-300">LalaFashion helps you build faster by transforming your design vision into fully functional, production-ready UI components.</p>
+              <p className="text-sm/6 text-neutral-600 dark:text-neutral-400 max-w-96 transition-colors duration-300">Modern Lifestyle — LALA Fashion is Pakistan's premier destination for high-quality watches, stylish glasses, exquisite jewellery, and the latest electronics.</p>
               <div className="flex gap-5 md:gap-6 order-1 md:order-2">
                 {/* X (Twitter) */}
                 <a href="#" className="text-neutral-600 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors duration-300">
@@ -82,51 +82,18 @@ export default async function Footer() {
               </div>
             </div>
 
-            <div className="lg:col-span-3 grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-y-12 items-start mt-8 lg:mt-0">
-              {/* Watches */}
+            <div className="lg:col-span-3 grid grid-cols-2 lg:grid-cols-3 gap-8 md:gap-y-12 items-start mt-8 lg:mt-0">
+              {/* Shop */}
               <div>
-                <h3 className="font-medium text-sm mb-4 dark:text-neutral-200 transition-colors duration-300">Watches</h3>
+                <h3 className="font-medium text-sm mb-4 dark:text-neutral-200 transition-colors duration-300">Shop</h3>
                 <ul className="space-y-3 text-sm text-neutral-800 dark:text-neutral-400 transition-colors duration-300">
-                  <li><a href="#" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Men's Watches</a></li>
-                  <li><a href="#" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Women's Watches</a></li>
-                  <li><a href="#" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Smartwatches</a></li>
-                  <li><a href="#" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Luxury Watches</a></li>
+                  <li><Link href="/shop" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Shop</Link></li>
+                  <li><Link href="/category/watches" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Watches</Link></li>
+                  <li><Link href="/category/glasses" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Glasses</Link></li>
+                  <li><Link href="/category/jewellery" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Jewellery</Link></li>
+                  <li><Link href="/category/electronics" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Electronics</Link></li>
                 </ul>
               </div>
-
-              {/* Glasses */}
-              <div>
-                <h3 className="font-medium text-sm mb-4 dark:text-neutral-200 transition-colors duration-300">Glasses</h3>
-                <ul className="space-y-3 text-sm text-neutral-800 dark:text-neutral-400 transition-colors duration-300">
-                  <li><a href="#" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Sunglasses</a></li>
-                  <li><a href="#" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Reading Glasses</a></li>
-                  <li><a href="#" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Prescription Glasses</a></li>
-                  <li><a href="#" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Fashion Glasses</a></li>
-                </ul>
-              </div>
-
-              {/* Jewellery */}
-              <div>
-                <h3 className="font-medium text-sm mb-4 dark:text-neutral-200 transition-colors duration-300">Jewellery</h3>
-                <ul className="space-y-3 text-sm text-neutral-800 dark:text-neutral-400 transition-colors duration-300">
-                  <li><a href="#" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Kaan (Earrings)</a></li>
-                  <li><a href="#" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Rings</a></li>
-                  <li><a href="#" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Bracelets &amp; Bangles</a></li>
-                  <li><a href="#" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Bag / Purse Accessories</a></li>
-                </ul>
-              </div>
-
-              {/* Electronics */}
-              <div>
-                <h3 className="font-medium text-sm mb-4 dark:text-neutral-200 transition-colors duration-300">Electronics</h3>
-                <ul className="space-y-3 text-sm text-neutral-800 dark:text-neutral-400 transition-colors duration-300">
-                  <li><a href="#" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Hair Dryers</a></li>
-                  <li><a href="#" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Beard Trimmers</a></li>
-                  <li><a href="#" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Electric Shavers</a></li>
-                  <li><a href="#" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Personal Care Gadgets</a></li>
-                </ul>
-              </div>
-
               {/* Support */}
               <div>
                 <h3 className="font-medium text-sm mb-4 dark:text-neutral-200 transition-colors duration-300">Support</h3>
@@ -160,7 +127,7 @@ export default async function Footer() {
           <div className="relative">
             <div className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-3xl h-full max-h-64 bg-slate-100 dark:bg-slate-900 rounded-full blur-[100px] pointer-events-none transition-colors duration-300" />
             <div className="flex items-center justify-center h-[12rem] sm:h-[16rem] md:h-[20rem] lg:h-[24rem]">
-              <TextHoverEffect text="LalaFashion" />
+              <TextHoverEffect text="LALA Fashion" />
             </div>
           </div>
         </footer>

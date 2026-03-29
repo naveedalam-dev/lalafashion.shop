@@ -68,7 +68,7 @@ export default function MobileMenu({ menu }: { menu: any }) {
                       className="p-2 text-xl text-black dark:text-white"
                     >
                       <Link
-                        href={item.slug ? `/search/${item.slug}` : "/search"}
+                        href={item.slug || "/shop"}
                         aria-label={`${item?.name}`}
                         onClick={handleClose}
                       >

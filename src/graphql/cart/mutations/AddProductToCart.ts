@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const CREATE_ADD_PRODUCT_IN_CART = gql`
+export const CREATE_ADD_PRODUCT_IN_CART_MUTATION = gql`
   mutation createAddProductInCart(
     $cartId: Int
     $productId: Int!

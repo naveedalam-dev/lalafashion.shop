@@ -1,8 +1,10 @@
+import type { Metadata } from "next";
 import OrderDetail from "@components/cart/OrderDetail";
 
-export const metadata = {
-  title: "Order Confirmed | NaveedShop",
-  description: "Your order has been placed successfully.",
+export const metadata: Metadata = {
+  title: "Order Confirmed | LALA Fashion",
+  description: "Your LALA Fashion order has been successfully placed. Thank you for shopping with us!",
+  robots: { index: false, follow: false },
 };
 
 const SuccessPage = () => {

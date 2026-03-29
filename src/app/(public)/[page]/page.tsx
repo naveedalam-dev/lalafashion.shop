@@ -2,7 +2,28 @@ import { notFound } from "next/navigation";
 import Prose from "@components/theme/search/Prose";
 import { getPage } from "@utils/bagisto";
 import { PageData } from "@/types/theme/theme-customization";
+import type { Metadata } from "next";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ page: string }>;
+}): Promise<Metadata> {
+  const { page: pageParams } = await params;
+  const pageDataArray: PageData[] = await getPage({ urlKey: pageParams });
+  const pageData = pageDataArray?.[0]?.translation;
+
+  const title = (pageData as any)?.metaTitle || pageData?.pageTitle || "LALA Fashion";
+  const description = (pageData as any)?.metaDescription || pageData?.pageTitle || "LALA Fashion";
+  const canonical = `https://www.lalafashion.store/${pageParams}`;
+
+  return {
+    title: `${title} | LALA Fashion`,
+    description,
+    alternates: { canonical },
+    robots: { index: true, follow: true },
+  };
+}
 
 export default async function Page({
   params,

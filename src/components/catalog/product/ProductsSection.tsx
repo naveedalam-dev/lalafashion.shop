@@ -2,7 +2,7 @@
 import { NOT_IMAGE } from "@/utils/constants";
 import Grid from "../../theme/ui/grid/Grid";
 import { baseUrl, getImageUrl } from "@/utils/constants";
-import { ProductCard } from "./ProductCard";
+import ProductCard from "./ProductCard";
 import { ProductsSectionProps } from "../type";
 
 

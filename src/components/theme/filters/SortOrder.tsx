@@ -1,189 +1,65 @@
 "use client";
 
-import { SORT, SortOrderTypes } from "@/utils/constants";
-import { createUrl } from "@/utils/helper";
-import { Select, SelectItem } from "@heroui/select";
+import { useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { FC, useState, useEffect } from "react";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerBody,
-  Button,
-  useDisclosure,
-} from "@heroui/react";
-import { SortIcon } from "@components/common/icons/SortIcon";
+import { SortOrderTypes } from "@/utils/constants";
+import { createUrl } from "@/utils/helper";
+import { SORT } from "@/utils/constants";
 
-
-
-const SortOrder: FC<{
-  sortOrders: SortOrderTypes[];
+export default function SortOrder({
+  title,
+  sortOrders,
+}: {
   title: string;
-}> = ({ sortOrders, title }) => {
+  sortOrders: SortOrderTypes[];
+}) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
   const sort = searchParams.get(SORT) || "name-asc";
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [tempSort, setTempSort] = useState(sort);
+  const handleSortChange = (newSort: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (newSort) {
+      params.set(SORT, newSort);
+    } else {
+      params.delete(SORT);
+    }
 
-  useEffect(() => {
-    setTempSort(sort);
-  }, [sort]);
-
-  const handleSortChange = (value: string) => {
-    const newParams = new URLSearchParams(searchParams.toString());
-
-    if (value) newParams.set(SORT, value);
-    const newUrl = createUrl(pathname, newParams);
-
-    router.replace(newUrl);
-  };
-
-  const applySort = () => {
-    handleSortChange(tempSort);
-    onOpenChange();
-  };
-
-  const clearFilters = () => {
-    const q = searchParams.get("q");
-    const newParams = new URLSearchParams();
-    if (q) newParams.set("q", q);
-    router.replace(createUrl(pathname, newParams));
-    onOpenChange();
+    const newUrl = createUrl(pathname, params);
+    startTransition(() => {
+      router.replace(newUrl, { scroll: false });
+    });
   };
 
   return (
-    <>
-      {/* Desktop View */}
-      <section className="hidden md:flex w-64 items-center gap-x-2.5">
-        <p
-          id="sort-label"
-          className="leading-0 text-nowrap min-[1300]:block hidden"
+    <div className="flex items-center gap-2">
+      <span className="text-xs font-bold uppercase tracking-widest text-stone-400">
+        {title}:
+      </span>
+      <div className="relative group">
+        <select 
+          value={sort}
+          onChange={(e) => handleSortChange(e.target.value)}
+          className="appearance-none border border-stone-200 dark:border-stone-700 rounded-lg py-2 px-4 pr-10 text-sm font-medium focus:ring-0 focus:border-stone-400 outline-none bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 cursor-pointer transition-colors"
         >
-          {title}
-        </p>
-        <Select
-          defaultOpen={false}
-          aria-label={title}
-          aria-labelledby="sort-label"
-          selectedKeys={[sort]}
-          isMultiline={false}
-          items={sortOrders}
-          placeholder="Select a Sort Order"
-          classNames={{
-            value: "text-neutral-800 dark:text-neutral-200",
-          }}
-          renderValue={(items) => (
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 pt-1">
-              {items.map((item) => (
-                <p key={item.key} className="text-neutral-800 dark:text-neutral-200">{item.data?.title}</p>
-              ))}
-            </div>
-          )}
-          size="md"
-          variant="flat"
-          onSelectionChange={(e) => handleSortChange(e.currentKey as string)}
-        >
-          {(order) => (
-            <SelectItem
-              key={order.value}
-              textValue={order.value}
-              className="text-neutral-800 dark:text-neutral-200"
-            >
+          {sortOrders.map((order) => (
+            <option key={order.key} value={order.key}>
               {order.title}
-            </SelectItem>
-          )}
-        </Select>
-      </section>
-
-      {/* Mobile View Toggle */}
-      <div className="md:hidden flex flex-wrap gap-3">
-        <Button
-          size="md"
-          variant="flat"
-          className="bg-neutral-100 dark:bg-neutral-800"
-          onPress={onOpen}
+            </option>
+          ))}
+        </select>
+        <svg 
+          className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-stone-400 w-4 h-4" 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
         >
-          <SortIcon />
-          <span className="font-outfit text-base tracking-wide"> Sort</span>
-        </Button>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
       </div>
-
-      {/* Mobile Bottom Sheet */}
-      <Drawer
-        isOpen={isOpen}
-        placement="bottom"
-        onOpenChange={onOpenChange}
-        hideCloseButton
-      >
-        <DrawerContent className="rounded-t-[32px] dark:bg-neutral-900">
-          {(_onClose) => (
-            <>
-              <DrawerHeader className="flex flex-col gap-1 pb-4 pt-2">
-                <div className="mx-auto h-1 w-10 rounded-full bg-neutral-300 dark:bg-neutral-700" />
-                <div className="flex items-center justify-between mt-2 px-2">
-                  <h2 className="text-2xl font-bold tracking-tight">Sort</h2>
-                  <div className="flex items-center gap-4">
-                    {Array.from(searchParams.keys()).some((key) => key !== "q") && (
-                      <button
-                        onClick={clearFilters}
-                        className="text-sm font-medium underline underline-offset-4 text-neutral-600 dark:text-neutral-400"
-                      >
-                        Clear all filters
-                      </button>
-                    )}
-                    <Button
-                      color="primary"
-                      radius="full"
-                      size="md"
-                      className="px-6 font-semibold"
-                      onPress={applySort}
-                    >
-                      Apply Filter
-                    </Button>
-                  </div>
-                </div>
-              </DrawerHeader>
-              <DrawerBody className="px-6 pb-12 pt-2">
-                <div className="flex flex-col gap-4">
-                  <p className="text-lg font-semibold text-neutral-800 dark:text-neutral-200">
-                    Sort By
-                  </p>
-                  <Select
-                    aria-label="Sort options"
-                    selectedKeys={[tempSort]}
-                    className="w-full"
-                    variant="flat"
-                    size="lg"
-                    classNames={{
-                      value: "text-neutral-800 dark:text-neutral-200",
-                      trigger: "dark:bg-neutral-800",
-                    }}
-                    onSelectionChange={(e) =>
-                      setTempSort(e.currentKey as string)
-                    }
-                  >
-                    {sortOrders.map((order) => (
-                      <SelectItem
-                        key={order.value}
-                        textValue={order.title}
-                        className="text-neutral-800 dark:text-neutral-200"
-                      >
-                        {order.title}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                </div>
-              </DrawerBody>
-            </>
-          )}
-        </DrawerContent>
-      </Drawer>
-    </>
+    </div>
   );
-};
-
-export default SortOrder;
+}

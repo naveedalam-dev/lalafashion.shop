@@ -103,7 +103,7 @@ export const configHeader = [
   },
   // Cache dynamic pages - shorter cache for frequently updated content
   {
-    source: "/search/:path*",
+    source: "/shop/:path*",
     headers: [
       {
         key: "Cache-Control",

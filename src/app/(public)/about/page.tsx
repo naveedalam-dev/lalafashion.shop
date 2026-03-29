@@ -7,25 +7,25 @@ const timelineData = [
     {
         year: '2020',
         title: 'The Visionary Start',
-        desc: 'Lala Fashion began as a small boutique with a big dream: to bring premium, hand-picked style to everyone. Our journey started with a focus on quality and authenticity.',
-        subDesc: 'We started with a curated collection of local craftsmanship that quickly resonated with fashion enthusiasts looking for something unique and meaningful.',
+        desc: 'LALA Fashion began with a simple dream: to bring premium, high-quality lifestyle products to every household. Our journey started with a focus on luxury watches and precision electronics.',
+        subDesc: 'We launched with a curated collection of authentic timepieces that quickly resonated with customers looking for quality and reliability.',
         label: 'The Beginning',
         icon: '→'
     },
     {
         year: '2023',
         title: 'Digital Transformation',
-        desc: 'As the world moved online, so did we. We launched our headless commerce platform to provide a seamless, modern shopping experience for our customers across Pakistan.',
-        subDesc: 'By integrating advanced technology with our fashion roots, we expanded our product range from watches to electronics and luxury accessories.',
+        desc: 'As the demand for premium lifestyle accessories grew, we evolved into a dedicated headless commerce platform. This allowed us to provide a seamless shopping experience for our tech-savvy customers across Pakistan.',
+        subDesc: 'By integrating modern technology with our product expertise, we expanded our catalog to include stylish glasses, exquisite jewellery, and the latest gadgets.',
         label: 'Expanding Horizon',
         icon: '↗'
     },
     {
         year: '2026',
-        title: 'Leading the Future',
-        desc: 'Today, Lala Fashion stands as a premier destination for lifestyle and fashion. We continue to bridge the gap between traditional quality and modern trends.',
-        subDesc: 'Our commitment to excellence remains unchanged. With thousands of happy customers and a growing global community, we are setting new standards in the fashion industry.',
-        label: 'Lala Fashion Today',
+        title: 'Defining Lifestyle Excellence',
+        desc: 'Today, LALA Fashion is a leading destination for premium lifestyle products in Pakistan. We continue to bridge the gap between luxury quality and modern necessity.',
+        subDesc: 'Our commitment to product authenticity and excellence remains unchanged. With a growing community of thousands of tech and style enthusiasts, we are setting new benchmarks.',
+        label: 'LALA Fashion Today',
         icon: '↗'
     }
 ];
@@ -44,7 +44,7 @@ const AboutPage = () => {
                         <h2 className="text-blue-600 font-bold tracking-wider uppercase text-sm mb-3">Evolution & Growth</h2>
                         <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4">Our Historical Timeline</h1>
                         <p className="text-gray-600 dark:text-neutral-400 max-w-2xl mx-auto text-sm md:text-base">
-                            Explore how Lala Fashion transformed from a visionary boutique into a premier digital lifestyle destination.
+                            Explore how LALA Fashion transformed from a boutique vision into Pakistan's premier digital destination for premium clothing.
                         </p>
                     </div>
 
@@ -100,8 +100,8 @@ const AboutPage = () => {
                     </div>
 
                     <div className="max-w-2xl mx-auto mb-16 text-center border-t border-gray-100 dark:border-neutral-800 pt-12">
-                        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">Why <span className="text-blue-600">Choose</span> Lala Fashion?</h2>
-                        <p className="text-gray-500 dark:text-neutral-400 text-sm">Experience the Future of Lifestyle</p>
+                        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">Why <span className="text-blue-600">Choose</span> LALA Fashion?</h2>
+                        <p className="text-gray-500 dark:text-neutral-400 text-sm">Experience the Future of Lifestyle Products</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -141,14 +141,14 @@ const AboutPage = () => {
 
                     <div className="border-t border-gray-100 dark:border-neutral-800 pt-12">
                         <div className="max-w-3xl mx-auto mb-12 text-center">
-                            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">Lala Fashion by the <span className="text-blue-600">Numbers</span></h2>
-                            <p className="text-gray-500 dark:text-neutral-400 text-sm italic">Building trust through quality products and exceptional service since 2020.</p>
+                            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">LALA Fashion by the <span className="text-blue-600">Numbers</span></h2>
+                            <p className="text-gray-500 dark:text-neutral-400 text-sm italic">Building trust through luxury design and exceptional service since 2020.</p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
                             <div className="border border-gray-100 dark:border-neutral-800 rounded-2xl overflow-hidden flex flex-col group hover:border-blue-200 transition-colors">
                                 <div className="p-6 pb-4 text-left text-xs md:text-sm text-gray-500 dark:text-neutral-400 flex-grow">
-                                    Trusted by fashion enthusiasts for over half a decade, delivering excellence with every package.
+                                    Trusted by thousands of tech and style enthusiasts for over half a decade, delivering premium products with every package.
                                 </div>
                                 <div className="bg-blue-50/50 dark:bg-neutral-800/50 p-6 pt-4 text-left group-hover:bg-blue-50 dark:group-hover:bg-neutral-800 transition-colors">
                                     <div className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-1">+50k</div>
@@ -157,7 +157,7 @@ const AboutPage = () => {
                             </div>
                             <div className="border border-gray-100 dark:border-neutral-800 rounded-2xl overflow-hidden flex flex-col group hover:border-blue-200 transition-colors">
                                 <div className="p-6 pb-4 text-left text-xs md:text-sm text-gray-500 dark:text-neutral-400 flex-grow">
-                                    A wide range of hand-picked products across various categories like watches, gadgets, and more.
+                                    A diverse collection of premium items, from luxury watches and trendy glasses to the latest smart electronics and electronics.
                                 </div>
                                 <div className="bg-blue-50/50 dark:bg-neutral-800/50 p-6 pt-4 text-left group-hover:bg-blue-50 dark:group-hover:bg-neutral-800 transition-colors">
                                     <div className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-1">+1000</div>
@@ -202,10 +202,10 @@ const AboutPage = () => {
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 font-outfit">Empowering Lifestyle Through Quality</h3>
                             <div className="space-y-4 text-gray-600 dark:text-neutral-400 leading-relaxed text-sm md:text-base">
                                 <p>
-                                    At Lala Fashion, we believe that every product you use is a reflection of your personality. Our mission has always been to provide high-quality, authentic products that empower individuals to look and feel their best.
+                                    At LALA Fashion, we believe that the products you choose reflect your unique lifestyle. Our mission has always been to provide high-quality, authentic items that empower individuals to enhance their everyday life.
                                 </p>
                                 <p>
-                                    As we look to the future, we remain dedicated to expanding our reach and enhancing our technology to provide you with the best shopping experience possible. Thank you for choosing Lala Fashion.
+                                    As we look to the future, we remain dedicated to sourcing only the finest watches, gadgets, and accessories to ensure our community always has access to the best technology and style.
                                 </p>
                             </div>
                             <div className="mt-8 border-t border-gray-100 dark:border-neutral-800 pt-6">

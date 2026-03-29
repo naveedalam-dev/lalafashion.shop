@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const GET_CHECKOUT_ADDRESSES = gql`
+export const GET_CHECKOUT_ADDRESSES_QUERY = gql`
  query collectionGetCheckoutAddresses {
 collectionGetCheckoutAddresses {
       edges {

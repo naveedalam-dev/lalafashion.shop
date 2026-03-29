@@ -2,11 +2,11 @@ import Link from "next/link";
 import MobileMenu from "./MobileMenu";
 
 const menuData = [
-  { id: "all", name: "All", slug: "" },
-  { id: "watches", name: "Watches", slug: "watches" },
-  { id: "glasses", name: "Glasses", slug: "glasses" },
-  { id: "jewellery", name: "Jewellery", slug: "jewellery" },
-  { id: "electronics", name: "Electronics", slug: "electronics" },
+  { id: "all", name: "Shop", slug: "/shop" },
+  { id: "watches", name: "Watches", slug: "/category/watches" },
+  { id: "glasses", name: "Glasses", slug: "/category/glasses" },
+  { id: "jewellery", name: "Jewellery", slug: "/category/jewellery" },
+  { id: "electronics", name: "Electronics", slug: "/category/electronics" },
 ];
 
 export async function CategoriesMenu() {
@@ -18,7 +18,7 @@ export async function CategoriesMenu() {
           <li key={item.id}>
             <Link
               className="text-nowrap relative text-neutral-500 before:absolute before:bottom-0 before:left-0 before:h-px before:w-0 before:bg-current before:transition-all before:duration-300 before:content-[''] hover:text-black hover:before:w-full dark:text-neutral-400 dark:hover:text-neutral-300"
-              href={item.slug ? `/search/${item.slug}` : "/search"}
+              href={item.slug}
               prefetch={true}
               aria-label={`Browse ${item.name} products`}
             >

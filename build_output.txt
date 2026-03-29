@@ -1,0 +1,138 @@
+﻿
+> nextjs-commerce-v3@0.1.0 build
+> next build
+
+node.exe : [baseline-browser-mapping] The data in 
+this module is over two months old.  To ensure 
+accurate Baseline data, please update: `npm i 
+baseline-browser-mapping@latest -D`
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: 
+([baseline-b    rows...ping@latest -D`:String) [], 
+RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ ΓÜá `eslint` configuration in next.config.ts is no 
+longer supported. See more info here: https://nextjs.
+org/docs/app/api-reference/cli/next#next-lint-options
+ ΓÜá Invalid next.config.ts options detected: 
+ ΓÜá     Unrecognized key(s) in object: 'eslint'
+ ΓÜá See more info here: 
+https://nextjs.org/docs/messages/invalid-next-config
+   Γû▓ Next.js 16.0.10 (Turbopack)
+   - Environments: .env.local, .env
+   - Experiments (use with caution):
+     ┬╖ optimizePackageImports
+     ┬╖ serverActions
+
+ ΓÜá The "middleware" file convention is deprecated. 
+Please use "proxy" instead. Learn more: 
+https://nextjs.org/docs/messages/middleware-to-proxy
+   Creating an optimized production build ...
+[baseline-browser-mapping] The data in this module 
+is over two months old.  To ensure accurate Baseline 
+data, please update: `npm i 
+baseline-browser-mapping@latest -D`
+(node:12428) [MODULE_TYPELESS_PACKAGE_JSON] Warning: 
+Module type of file:///G:/My%20websites/naveed/nextjs
+-commerce/hero.ts?id=1774789672501 is not specified 
+and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was 
+detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to 
+G:\My websites\naveed\nextjs-commerce\package.json.
+(Use `node --trace-warnings ...` to show where the 
+warning was created)
+ Γ£ô Compiled successfully in 19.7s
+   Skipping validation of types
+   Collecting page data using 3 workers ...
+[baseline-browser-mapping] The data in this module 
+is over two months old.  To ensure accurate Baseline 
+data, please update: `npm i 
+baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module 
+is over two months old.  To ensure accurate Baseline 
+data, please update: `npm i 
+baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module 
+is over two months old.  To ensure accurate Baseline 
+data, please update: `npm i 
+baseline-browser-mapping@latest -D`
+   Generating static pages using 3 workers (0/45) ...
+[baseline-browser-mapping] The data in this module 
+is over two months old.  To ensure accurate Baseline 
+data, please update: `npm i 
+baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module 
+is over two months old.  To ensure accurate Baseline 
+data, please update: `npm i 
+baseline-browser-mapping@latest -D`
+   Generating static pages using 3 workers (11/45) 
+   Generating static pages using 3 workers (22/45) 
+   Generating static pages using 3 workers (33/45) 
+ Γ£ô Generating static pages using 3 workers (45/45) in 2.2s
+   Finalizing page optimization ...
+
+Route (app)                         Revalidate  Expire
+Γöî ╞Æ /
+Γö£ Γùï /_not-found                             1y      1y
+Γö£ ╞Æ /[page]
+Γö£ ╞Æ /[page]/opengraph-image-gc0894
+Γö£ ╞Æ /about
+Γö£ ╞Æ /admin-login
+Γö£ Γùï /admin-login/activity
+Γö£ Γùï /admin-login/approve
+Γö£ Γùï /admin-login/banners
+Γö£ Γùï /admin-login/categories
+Γö£ Γùï /admin-login/contact
+Γö£ Γùï /admin-login/coupons
+Γö£ Γùï /admin-login/featured
+Γö£ Γùï /admin-login/hero
+Γö£ Γùï /admin-login/newsletter
+Γö£ Γùï /admin-login/orders
+Γö£ Γùï /admin-login/popular
+Γö£ Γùï /admin-login/products
+Γö£ Γùï /admin-login/ratings
+Γö£ Γùï /admin-login/settings
+Γö£ Γùï /admin-login/shop-categories
+Γö£ Γùï /admin-login/users
+Γö£ ╞Æ /api/auth/[...nextauth]
+Γö£ ╞Æ /api/contact
+Γö£ ╞Æ /api/coupons/validate
+Γö£ ╞Æ /api/graphql
+Γö£ ╞Æ /api/orders
+Γö£ ╞Æ /api/product-details
+Γö£ ╞Æ /api/revalidate
+Γö£ ╞Æ /api/upload
+Γö£ ╞Æ /category/[slug]
+Γö£ ╞Æ /checkout
+Γö£ ╞Æ /contact
+Γö£ ╞Æ /customer/forget-password
+Γö£ ╞Æ /customer/login
+Γö£ ╞Æ /customer/register
+Γö£ ╞Æ /data-policy
+Γö£ ╞Æ /disclaimer
+Γö£ ╞Æ /faqs
+Γö£ Γùï /icon.png
+Γö£ ╞Æ /privacy-policy
+Γö£ ╞Æ /product/[...urlProduct]
+Γö£ ╞Æ /return-policy
+Γö£ Γùï /robots.txt
+Γö£ ╞Æ /shipment-policy
+Γö£ ╞Æ /shop
+Γö£ ╞Æ /shop/[collection]
+Γö£ Γùï /sitemap.xml
+Γö£ ╞Æ /success
+Γö£ ╞Æ /terms
+Γöö ╞Æ /track-order
+
+
+╞Æ Proxy (Middleware)
+
+Γùï  (Static)   prerendered as static content
+╞Æ  (Dynamic)  server-rendered on demand
+

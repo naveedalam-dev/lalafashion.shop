@@ -1,4 +1,4 @@
-export {CREATE_CHECKOUT_ADDRESS} from "./CreateCheckoutAddress" ;
-export {CREATE_CHECKOUT_ORDER} from "./CreateCheckoutOrder" ;
-export {CREATE_CHECKOUT_PAYMENT_METHODS} from "./CreateCheckoutPaymentMethod";
-export {CREATE_CHECKOUT_SHIPPING_METHODS} from "./CreateCheckoutShippingMethod";
+export {CREATE_CHECKOUT_ADDRESS_MUTATION} from "./CreateCheckoutAddress" ;
+export {CREATE_CHECKOUT_ORDER_MUTATION} from "./CreateCheckoutOrder" ;
+export {CREATE_CHECKOUT_PAYMENT_METHOD_MUTATION} from "./CreateCheckoutPaymentMethod";
+export {CREATE_CHECKOUT_SHIPPING_METHODS_MUTATION} from "./CreateCheckoutShippingMethod";

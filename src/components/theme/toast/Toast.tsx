@@ -1,5 +1,5 @@
 "use client";
-import { ToastDataType } from "@/providers/ToastProvider";
+import { ToastDataType } from "@/providers";
 import { Alert } from "@heroui/alert";
 import { motion } from "framer-motion";
 import { useEffect } from "react";

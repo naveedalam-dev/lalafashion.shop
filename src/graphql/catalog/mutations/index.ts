@@ -1,1 +1,1 @@
-export { CREATE_PRODUCT_REVIEW } from "./CreateProductReview";
+export { CREATE_PRODUCT_REVIEW_MUTATION } from "./CreateProductReview";

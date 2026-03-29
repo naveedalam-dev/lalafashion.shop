@@ -15,16 +15,16 @@ import {
 
 const faqs = [
     {
-        question: "How long does shipping take?",
-        answer: "Standard shipping takes 3-5 business days. Express shipping is available for 1-2 business day delivery across all major cities in Pakistan."
+        question: "How long does delivery take within Pakistan?",
+        answer: "Standard delivery across Pakistan takes 3-5 business days. Express delivery in Islamabad and Rawalpindi is available for same-day or next-day arrival."
     },
     {
-        question: "What is your return policy?",
-        answer: "We offer a 7-day easy return policy for items in their original condition and packaging. Please visit our returns page for more details."
+        question: "What is your return policy for stitched suits?",
+        answer: "We offer a 7-day easy return policy for unstitched fabric and ready-to-wear items in their original condition. Custom-stitched orders are generally final sale unless there is a manufacturing defect."
     },
     {
-        question: "Do you ship internationally?",
-        answer: "Yes, we ship to selected international locations. Shipping times and costs vary depending on the destination."
+        question: "Do you offer international shipping?",
+        answer: "Yes, we ship our luxury Pakistani fashion worldwide. International shipping times and costs vary by country and will be calculated at checkout."
     }
 ];
 

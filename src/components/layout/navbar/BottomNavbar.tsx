@@ -24,12 +24,11 @@ const BottomNavbar = memo(function BottomNavbar({
   setActiveTab: (tab: Tab) => void;
 }) {
   const cartDetail = useAppSelector((state) => state.cartDetail);
-  const itemBase =
-    "flex flex-col items-center gap-1 text-xs font-semibold py-2 rounded-lg transition-colors cursor-pointer";
+  const itemBase = "flex flex-col items-center justify-center w-full h-full gap-[2px] text-[10px] sm:text-[11px] font-medium transition-colors cursor-pointer";
 
   const getIconWrapperClass = (tab: Tab) =>
     clsx(
-      "flex items-center justify-center rounded-full transition-all duration-300 px-6 py-1",
+      "flex items-center justify-center rounded-2xl transition-all duration-300 px-5 py-1 sm:px-6 sm:py-1.5",
       activeTab === tab
         ? "bg-selected-color dark:bg-selected-bg-bottom-dark dark:text-selected-bottom-dark"
         : "bg-transparent text-neutral-900 dark:text-neutral-400"
@@ -37,8 +36,8 @@ const BottomNavbar = memo(function BottomNavbar({
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-30 lg:hidden">
-      <nav className="px-3 h-16 border-t border-neutral-200 bg-white dark:border-neutral-800 dark:bg-black">
-        <div className="flex h-full items-center justify-between">
+      <nav className="h-16 border-t border-neutral-200 bg-white dark:border-neutral-800 dark:bg-black px-1 sm:px-2">
+        <div className="mx-auto grid h-full w-full max-w-md grid-cols-4">
 
           {/* Home */}
           <Link

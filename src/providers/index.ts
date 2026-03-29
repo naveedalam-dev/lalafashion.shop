@@ -5,6 +5,6 @@ export { NextAuthProvider } from "./NextAuthProvider";
 export { ReduxProvider } from "./ReduxProvider";
 export { SessionManager } from "./SessionManager";
 export { ThemeProvider } from "./ThemeProvider";
-export { ToastProvider, useToast } from "./ToastProvider";
+export * from "./ToastProvider";
 export { SessionProvider } from "./SessionProvider";
 export { SessionSync } from "./SessionSync";

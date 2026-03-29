@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const CREATE_CHECKOUT_ADDRESS = gql`
+export const CREATE_CHECKOUT_ADDRESS_MUTATION = gql`
  mutation createCheckoutAddress(
     $billingFirstName: String!
     $billingLastName: String!

@@ -148,7 +148,7 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options }) => {
                         >
                             {img.link ? (
                                 <Link
-                                    href={`/search/${img.link}`}
+                                    href={`/shop/${img.link}`}
                                     className="block h-full w-full"
                                     aria-label={`View ${altText}`}
                                 >

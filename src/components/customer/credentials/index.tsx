@@ -1,4 +1,4 @@
-import CredentialModal from "./CredentialModal";
+import { CredentialModal } from "./CredentialModal";
 
 export default function UserAccount({
   children,

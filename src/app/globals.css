@@ -60,6 +60,8 @@ body::-webkit-scrollbar-thumb {
   --font-size-xxs: 13px;
   /* Font family */
   --font-family-outfit: var(--font-outfit), system-ui, sans-serif;
+  --font-headline: var(--font-noto-serif), serif;
+  --font-body: var(--font-manrope), sans-serif;
 }
 
 /* GLOBAL VARIABLES */
@@ -314,6 +316,11 @@ body {
   }
   .dark .bg-dot-pattern {
     background-image: radial-gradient(#27272a 0.8px, transparent 0.8px);
+  }
+
+  /* Premium Shop UI Helpers */
+  .filter-shadow {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   }
 }
 

@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const CREATE_CHECKOUT_ORDER = gql`
+export const CREATE_CHECKOUT_ORDER_MUTATION = gql`
   mutation CreateCheckoutOrder {
     createCheckoutOrder(
       input: {}

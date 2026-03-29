@@ -7,8 +7,8 @@ import { useGuestCartToken } from "./useGuestCartToken";
 import { IS_GUEST } from "@/utils/constants";
 import { useMutation } from "@apollo/client";
 import {
-  REMOVE_CART_ITEM,
-  UPDATE_CART_ITEM,
+  REMOVE_CART_ITEM_MUTATION,
+  UPDATE_CART_ITEM_MUTATION,
 } from "@/graphql";
 
 
@@ -109,7 +109,7 @@ export const useAddProduct = () => {
 
   //--------Remove Cart Product Quantity--------//
   const [removeFromCart, { loading: isRemoveLoading }] = useMutation(
-    REMOVE_CART_ITEM,
+    REMOVE_CART_ITEM_MUTATION,
     {
       onCompleted: async (response) => {
         const responseData = response?.createRemoveCartItem?.removeCartItem;
@@ -146,7 +146,7 @@ export const useAddProduct = () => {
 
   //---------Update Cart Product Quantity--------//
   const [updateCartItem, { loading: isUpdateLoading }] = useMutation(
-    UPDATE_CART_ITEM,
+    UPDATE_CART_ITEM_MUTATION,
     {
       onCompleted: (response: any) => {
         const responseData = response?.createUpdateCartItem?.updateCartItem;

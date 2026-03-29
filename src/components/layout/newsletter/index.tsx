@@ -75,7 +75,7 @@ const NewsletterSection = () => {
                             Join our newsletter
                         </h2>
                         <p className="text-base md:text-lg text-neutral-600 dark:text-neutral-400 mb-10 max-w-2xl mx-auto transition-colors duration-300">
-                            Stay updated with our latest collections, exclusive offers, and fashion insights delivered straight to your inbox.
+                            Stay updated with our latest Pakistani fashion collections, exclusive luxury offers, and style insights delivered straight to your inbox.
                         </p>
 
                         <form

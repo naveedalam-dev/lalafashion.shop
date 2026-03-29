@@ -17,7 +17,14 @@ export function CartAndUserActions() {
         <Truck className="w-4 h-4 text-blue-600 group-hover:scale-110 transition-transform" />
         <span className="hidden md:inline">Track Order</span>
       </Link>
-      <div className="flex">
+      <div className="flex items-center gap-2">
+        <Link 
+          href="/track-order" 
+          className="flex sm:hidden size-9 items-center justify-center rounded-sm border border-solid border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 transition-all duration-300 hover:bg-slate-50 dark:hover:bg-neutral-700 shadow-sm"
+          aria-label="Track Order"
+        >
+          <Truck className="w-5 h-5 text-blue-600" />
+        </Link>
         <ThemeSwitcherWrapper />
       </div>
       <div className="hidden lg:block">

@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const GET_CHECKOUT_PAYMENT_METHODS = gql`
+export const GET_CHECKOUT_PAYMENT_METHODS_QUERY = gql`
   query CheckoutPaymentMethods {
     collectionPaymentMethods {
       id

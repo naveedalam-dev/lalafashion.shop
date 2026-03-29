@@ -1,8 +1,8 @@
 // ─── SITE IDENTITY ────────────────────────────────────────────────────────────
 export const SITE_NAME        = 'LALA Fashion';
-export const SITE_DESCRIPTION = 'Pakistan\'s premium women\'s fashion — kurtis, gowns, ready-to-wear suits and more.';
+export const SITE_DESCRIPTION = 'Modern Lifestyle — Discover Pakistan\'s premium destination for watches, glasses, exquisite jewellery, and the latest electronics at LALA Fashion.';
 export const PRIMARY_DOMAIN   = 'https://www.lalafashion.store';
-export const OG_IMAGE         = `${PRIMARY_DOMAIN}/Logo.png`;
+export const OG_IMAGE         = `${PRIMARY_DOMAIN}/og-image.png`;
 
 // ─── STATIC SEO DATA ──────────────────────────────────────────────────────────
 export const staticSeo = {

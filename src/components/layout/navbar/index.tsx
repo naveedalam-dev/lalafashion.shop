@@ -12,7 +12,7 @@ import { NavbarErrorBoundary } from "@/components/error/ErrorBoundary";
 export default function Navbar() {
   return (
     <NavbarErrorBoundary>
-      <header className="sticky top-0 z-10">
+      <header className="sticky top-0 z-50">
         <nav className="relative flex flex-col items-center justify-between gap-4 bg-neutral-50 p-4 dark:bg-neutral-900 md:flex-row lg:px-6 lg:py-4">
           <div className="flex w-full items-center justify-between gap-0 sm:gap-4">
             {/* 1. THE STATIC SHELL (Visible Instantly) */}
