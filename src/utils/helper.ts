@@ -225,8 +225,8 @@ export async function generateMetadataForPage(
     "document-meta-version": "dsv-2025.04.19-7e29",
   };
 
-  const title       = fallback?.title       || "LALA Fashion — Premium Women's Fashion";
-  const description = fallback?.description || "Pakistan's premium women's fashion store.";
+  const title       = fallback?.title       || "LALA Fashion — Modern Lifestyle Store";
+  const description = fallback?.description || "Shop high-quality watches, stylish glasses, exquisite jewellery, and the latest electronics at LALA Fashion.";
   const ogImage     = fallback?.image       || OG_IMAGE;
 
   // Build canonical: if fallback provides a full URL use it, otherwise build from slug.

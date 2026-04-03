@@ -44,7 +44,7 @@ export async function generateMetadata({
 
   const translation = categoryItem.translation;
   const title = translation?.metaTitle || translation?.name || "Collection | LALA Fashion";
-  const description = translation?.description || `Shop our ${translation?.name || 'collection'} — premium women\'s fashion at LALA Fashion.`;
+  const description = translation?.description || `Shop our ${translation?.name || 'collection'} — premium lifestyle accessories at LALA Fashion.`;
   const canonical = `https://www.lalafashion.store/shop/${categorySlug}`;
 
   return {

@@ -41,7 +41,7 @@ export async function generateMetadata({
     ? `${category.name} | LALA Fashion`
     : `Collection | LALA Fashion`;
   const description = category?.description
-    || `Explore our ${category?.name || 'collection'} — premium women's fashion at LALA Fashion.`;
+    || `Explore our ${category?.name || 'collection'} — premium lifestyle accessories at LALA Fashion.`;
   const canonical = `https://www.lalafashion.store/category/${slug}`;
 
   return {

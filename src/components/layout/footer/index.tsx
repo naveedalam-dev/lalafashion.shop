@@ -121,7 +121,7 @@ export default async function Footer() {
           </div>
 
           <div className="max-w-7xl mx-auto mt-12 pt-4 border-t border-neutral-300 dark:border-neutral-800 flex justify-between items-center z-10 relative transition-colors duration-300">
-            <p className="text-neutral-600 dark:text-neutral-400 text-sm transition-colors duration-300">© 2025 LalaFashion Design</p>
+            <p className="text-neutral-600 dark:text-neutral-400 text-sm transition-colors duration-300">© {currentYear} LalaFashion Design</p>
             <p className='text-sm text-neutral-600 dark:text-neutral-400 transition-colors duration-300'>All right reserved.</p>
           </div>
           <div className="relative">

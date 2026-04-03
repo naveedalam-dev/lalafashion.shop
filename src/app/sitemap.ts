@@ -54,13 +54,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }));
 
   // ── Category pages ────────────────────────────────────────────────────────────
+  // Only include categories that have at least one ACTIVE product (avoids thin content)
   const { data: categories } = await supabase
     .from('categories')
-    .select('slug, updated_at')
+    .select('id, slug, updated_at')
     .not('slug', 'is', null);
 
+  // Find which category IDs actually have active products (single query)
+  const categoryIds = (categories || []).map((c) => c.id);
+  const { data: activeCatProducts } = categoryIds.length > 0
+    ? await supabase
+        .from('products')
+        .select('category_id')
+        .in('category_id', categoryIds)
+        .eq('stock_status', 'ACTIVE')
+    : { data: [] };
+
+  const activeCategoryIds = new Set(
+    (activeCatProducts || []).map((p) => p.category_id)
+  );
+
+  // Slugs that are handled by redirects — exclude from sitemap
+  const redirectedSlugs = new Set(['watch']);
+
   const categoryUrls: MetadataRoute.Sitemap = (categories || [])
-    .filter((c) => c.slug)
+    .filter((c) => c.slug && activeCategoryIds.has(c.id) && !redirectedSlugs.has(c.slug))
     .map((c) => ({
       url: `${BASE}/category/${c.slug}`,
       lastModified: c.updated_at ? new Date(c.updated_at) : now,

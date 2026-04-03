@@ -56,6 +56,9 @@ const nextConfig = {
       { source: '/contact-us',            destination: '/contact',           permanent: true },
       { source: '/about-us',             destination: '/about',             permanent: true },
       { source: '/track',                 destination: '/track-order',       permanent: true },
+
+      // ── Duplicate category slug consolidation (sitemap audit 2026-04-03) ──
+      { source: '/category/watch',         destination: '/category/watches',  permanent: true },
     ];
   },
 
