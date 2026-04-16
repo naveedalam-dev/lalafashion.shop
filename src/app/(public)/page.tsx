@@ -92,11 +92,11 @@ export default async function Home() {
               : 0;
           
           // Logic: 
-          // 1. price = MRP (Original)
+          // 1. price = MRP (Original) or sale_price if MRP is missing
           // 2. specialPrice = sale_price (Actual) IF it is lower than MRP
-          const originalPrice = p.mrp || p.price || 0;
-          const salePrice = p.sale_price || null;
-          const isActuallyOnSale = salePrice !== null && Number(salePrice) < Number(originalPrice);
+          const salePrice = p.sale_price !== null ? Number(p.sale_price) : 0;
+          const originalPrice = p.mrp ? Number(p.mrp) : salePrice;
+          const isActuallyOnSale = p.mrp !== null && salePrice < Number(p.mrp);
 
           return {
               id: p.id,

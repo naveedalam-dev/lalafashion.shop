@@ -47,14 +47,14 @@ export default function ProductCard({
   return (
     <div className="group flex flex-col h-full bg-white dark:bg-stone-900 rounded-2xl p-3 border border-transparent hover:border-stone-100 dark:hover:border-stone-800 hover:shadow-xl transition-all duration-500">
       {/* Image Container */}
-      <div className="relative aspect-square overflow-hidden rounded-2xl md:rounded-3xl bg-[#f0f0f0] dark:bg-stone-900 group-hover:shadow-lg transition-all duration-500 p-2 md:p-8">
+      <div className="relative aspect-square overflow-hidden rounded-2xl md:rounded-3xl bg-white dark:bg-stone-900 group-hover:shadow-lg transition-all duration-500">
         <Link href={`/product/${urlKey}`} className="block w-full h-full">
           <Image
             src={mainImage}
             alt={altText}
             width={500}
             height={500}
-            className="w-full h-full object-cover p-2 md:p-8 group-hover:scale-105 transition-transform duration-700"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
             priority={priority}
           />
         </Link>

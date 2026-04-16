@@ -36,7 +36,9 @@ export default function ProductsPage() {
         available_qty: "0",
         image_url: "",
         images: [] as string[],
-        colors: [] as { name: string; hex: string }[]
+        colors: [] as { name: string; hex: string }[],
+        shipping_cost_type: "free",
+        shipping_cost_value: ""
     });
 
     useEffect(() => {
@@ -156,8 +158,16 @@ export default function ProductsPage() {
         }
 
         setIsSubmitting(true);
-        const slug = formData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-        const payload = {
+        // Better slug generation: handles special characters and ensures it's not empty
+        let slug = formData.name.toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)+/g, '');
+        
+        if (!slug) {
+            slug = `product-${Date.now()}`;
+        }
+
+        const payload: any = {
             name: formData.name,
             slug: slug,
             sku: formData.sku || `SKU-${Date.now().toString().slice(-6)}`,
@@ -172,29 +182,44 @@ export default function ProductsPage() {
             available_qty: Number(formData.available_qty),
             image_url: formData.image_url,
             images: formData.images,
-            colors: formData.colors
+            colors: formData.colors,
+            shipping_cost_type: formData.shipping_cost_type,
+            shipping_cost_value: formData.shipping_cost_value ? Number(formData.shipping_cost_value) : 0,
+            updated_at: new Date().toISOString()
         };
 
-        let err;
-        if (formData.id) {
-            // Update
-            const { error } = await supabase.from('products').update(payload).eq('id', formData.id);
-            err = error;
-        } else {
-            // Insert
-            const { error } = await supabase.from('products').insert(payload);
-            err = error;
-        }
+        try {
+            console.log("Saving product with payload:", payload);
+            let response;
+            if (formData.id) {
+                response = await supabase.from('products').update(payload).eq('id', formData.id);
+            } else {
+                response = await supabase.from('products').insert(payload);
+            }
 
-        if (err) {
-            alert("Failed to save product: " + err.message);
-        } else {
+            if (response.error) {
+                console.error("Supabase error:", response.error);
+                throw new Error(response.error.message);
+            }
+
             alert("Product saved successfully!");
-            await logAdminAction(formData.id ? "Updated Product" : "Created Product", "Product", formData.id ? formData.id : undefined, { name: payload.name, sku: payload.sku });
+            
+            // Log the action for audit
+            await logAdminAction(
+                formData.id ? "Updated Product" : "Created Product",
+                "Product",
+                formData.id || undefined,
+                { name: payload.name, sku: payload.sku }
+            ).catch(err => console.error("Logging error:", err));
+
             setIsDrawerOpen(false);
             fetchProductsAndCategories();
+        } catch (err: any) {
+            console.error("Save failed:", err);
+            alert("Failed to save product: " + (err.message || "Unknown error"));
+        } finally {
+            setIsSubmitting(false);
         }
-        setIsSubmitting(false);
     };
 
     const handleDelete = async (id: string) => {
@@ -213,7 +238,8 @@ export default function ProductsPage() {
             id: "", name: "", sku: "", stock_status: "ACTIVE", sale_price: "", mrp: "",
             category_id: "", description: "", made_in: "", design: "",
             delivery_info: "Usually ships in 24 hours", available_qty: "0",
-            image_url: "", images: [], colors: []
+            image_url: "", images: [], colors: [],
+            shipping_cost_type: "free", shipping_cost_value: ""
         });
         setIsDrawerOpen(true);
     };
@@ -234,7 +260,9 @@ export default function ProductsPage() {
             available_qty: product.available_qty ? product.available_qty.toString() : "0",
             image_url: product.image_url || "",
             images: product.images || (product.image_url ? [product.image_url] : []),
-            colors: product.colors || []
+            colors: product.colors || [],
+            shipping_cost_type: product.shipping_cost_type || "free",
+            shipping_cost_value: product.shipping_cost_value ? product.shipping_cost_value.toString() : ""
         });
         setIsDrawerOpen(true);
     };
@@ -554,6 +582,35 @@ export default function ProductsPage() {
                                         className="w-full rounded-md border border-[#c9c9c9] dark:border-gray-700 px-3 py-2 text-sm shadow-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-all dark:bg-[#111113] dark:text-white"
                                     />
                                 </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 mt-4">
+                                <div>
+                                    <label className="block text-[13px] font-medium text-gray-700 dark:text-gray-300 mb-1.5">Delivery Charges</label>
+                                    <select
+                                        value={formData.shipping_cost_type}
+                                        onChange={e => setFormData({ ...formData, shipping_cost_type: e.target.value })}
+                                        className="w-full rounded-md border border-[#c9c9c9] dark:border-gray-700 px-3 py-2 text-sm shadow-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-all dark:bg-[#111113] dark:text-white"
+                                    >
+                                        <option value="free">Free Delivery</option>
+                                        <option value="fixed">Fixed Amount (Rs)</option>
+                                        <option value="percentage">Percentage (%)</option>
+                                    </select>
+                                </div>
+                                {formData.shipping_cost_type !== "free" && (
+                                    <div>
+                                        <label className="block text-[13px] font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                                            {formData.shipping_cost_type === "fixed" ? "Amount (Rs)" : "Percentage (%)"}
+                                        </label>
+                                        <input
+                                            type="number"
+                                            value={formData.shipping_cost_value}
+                                            onChange={e => setFormData({ ...formData, shipping_cost_value: e.target.value })}
+                                            className="w-full rounded-md border border-[#c9c9c9] dark:border-gray-700 px-3 py-2 text-sm shadow-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-all placeholder:text-gray-400 dark:bg-[#111113] dark:text-white"
+                                            placeholder="0.00"
+                                        />
+                                    </div>
+                                )}
                             </div>
                         </div>
 

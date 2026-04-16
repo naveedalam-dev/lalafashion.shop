@@ -130,16 +130,16 @@ export const ThreeItemGrid: FC<ThreeItemGridProps> = ({ title, description, prod
                 </p>
             </div>
 
-            <div className="hidden md:grid gap-4 md:grid-cols-6 md:grid-rows-2 lg:max-h-[calc(100vh-200px)]">
+            <div className="hidden md:grid gap-4 md:grid-cols-6 md:grid-rows-2">
                 <ThreeItemGridItem product={firstProduct} size="full" priority={true} />
                 <ThreeItemGridItem product={secondProduct} size="half" priority={true} />
                 <ThreeItemGridItem product={thirdProduct} size="half" />
             </div>
 
-            <div className="grid md:hidden gap-4 grid-cols-1 xxs:grid-cols-2 lg:max-h-[calc(100vh-200px)]">
-                <MobileThreeItemGridItem product={firstProduct} size="full" priority={true} />
-                <MobileThreeItemGridItem product={secondProduct} size="half" priority={true} />
-                <MobileThreeItemGridItem product={thirdProduct} size="half" />
+            <div className="grid md:hidden gap-4 grid-cols-1 xxs:grid-cols-2">
+                <ThreeItemGridItem product={firstProduct} size="full" priority={true} />
+                <ThreeItemGridItem product={secondProduct} size="half" priority={true} />
+                <ThreeItemGridItem product={thirdProduct} size="half" />
             </div>
         </section>
     );

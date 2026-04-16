@@ -9,7 +9,7 @@ const supabase = createClient(
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { shippingData, cartItems, subtotal, couponCode, discountAmount, finalTotal } = body;
+    const { shippingData, cartItems, subtotal, shippingCost, couponCode, discountAmount, finalTotal } = body;
 
     if (!shippingData || !cartItems?.length) {
       return NextResponse.json({ error: "Missing order data" }, { status: 400 });
@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
         payment_status: "pending",
         shipping_address: addressStr,
         contact_phone: shippingData.contact,
+        shipping_cost: shippingCost || 0,
         coupon_code: couponCode || null,
         discount_amount: discountAmount || 0,
       })
@@ -132,6 +133,7 @@ export async function GET(req: NextRequest) {
         payment_method,
         payment_status,
         shipping_address,
+        shipping_cost,
         contact_phone,
         created_at,
         items:order_items(

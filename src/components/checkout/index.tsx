@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/store/hooks";
@@ -45,40 +45,48 @@ const S = {
 /* ─── Validation rules ─── */
 const VALIDATORS: Record<string, { test: (v: string) => boolean; msg: string }> = {
   fullName: {
-    test: (v) => /^[a-zA-Z\u0600-\u06FF\s]{3,50}$/.test(v.trim()),
-    msg: "Full name must be 3–50 letters only (no numbers or symbols).",
+    test: (v) => {
+      const val = (v || "").trim();
+      // Professional: allow letters, spaces, dots, dashes, apostrophes
+      return val.length >= 3 && val.length <= 60;
+    },
+    msg: "Full name must be 3-60 characters.",
   },
   contact: {
     test: (v) => {
-      const num = v.replace(/\s/g, "");
-      // Strictly Pakistani mobile format: 03XX-XXXXXXX or +923XX-XXXXXXX
-      return /^(03|\+923)[0-9]{9}$/.test(num);
+      if (!v) return false;
+      const digits = v.replace(/\D/g, ""); // Strip all non-digits
+      return digits.length >= 10 && digits.length <= 15;
     },
-    msg: "Enter a valid Pakistani number: 03XXXXXXXXX or +923XXXXXXXXX.",
+    msg: "Please enter a valid phone number (10-15 digits).",
   },
   address: {
-    test: (v) => v.trim().length >= 8,
-    msg: "Address must be at least 8 characters.",
+    test: (v) => (v || "").trim().length >= 5,
+    msg: "Street address is too short.",
   },
   city: {
-    test: (v) => /^[a-zA-Z\u0600-\u06FF\s]{2,40}$/.test(v.trim()),
-    msg: "City must be letters only (no numbers).",
+    test: (v) => (v || "").trim().length >= 2,
+    msg: "City name is too short.",
   },
   zip: {
-    test: (v) => v === "" || /^\d{5}$/.test(v.trim()),
-    msg: "Zip code must be exactly 5 digits (numbers only).",
+    test: (v) => {
+      const val = (v || "").trim();
+      return val === "" || /^\d{4,10}$/.test(val);
+    },
+    msg: "Zip code should be 4-10 digits.",
   },
   landmark: {
-    test: (v) => v.trim().length >= 5,
-    msg: "Landmark must be at least 5 characters.",
+    test: (v) => (v || "").trim().length >= 3,
+    msg: "Landmark is too short.",
   },
   emergency: {
     test: (v) => {
-      if (v === "") return true;
-      const num = v.replace(/\s/g, "");
-      return /^(03|\+923)[0-9]{9}$/.test(num);
+      const val = (v || "").trim();
+      if (!val) return true;
+      const digits = val.replace(/\D/g, "");
+      return digits.length >= 10 && digits.length <= 15;
     },
-    msg: "Enter a valid Pakistani number or leave blank.",
+    msg: "Enter a valid secondary number or leave blank.",
   },
 };
 
@@ -87,8 +95,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
 }
 
-function ValidatedInput({ error, style, ...props }: InputProps) {
-  const [focused, setFocused] = useState(false);
+function ValidatedInput({ error, style, isFocused, ...props }: InputProps & { isFocused?: boolean }) {
   const hasError = !!error;
   return (
     <div style={{ position: "relative" }}>
@@ -97,7 +104,7 @@ function ValidatedInput({ error, style, ...props }: InputProps) {
         style={{
           width: "100%",
           padding: "11px 14px",
-          border: `1.5px solid ${hasError ? "#ef4444" : focused ? "#2563EB" : "#e5e7eb"}`,
+          border: `1.5px solid ${hasError ? "#ef4444" : isFocused ? "#2563EB" : "#e5e7eb"}`,
           borderRadius: "8px",
           fontSize: "14px",
           color: "#374151",
@@ -106,7 +113,7 @@ function ValidatedInput({ error, style, ...props }: InputProps) {
           boxSizing: "border-box" as const,
           fontFamily: "inherit",
           transition: "border-color 0.2s, background 0.2s",
-          boxShadow: focused
+          boxShadow: isFocused
             ? hasError
               ? "0 0 0 3px rgba(239,68,68,0.1)"
               : "0 0 0 3px rgba(37,99,235,0.1)"
@@ -114,8 +121,6 @@ function ValidatedInput({ error, style, ...props }: InputProps) {
           paddingRight: hasError ? "38px" : "14px",
           ...style,
         }}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
       />
       {/* Error icon */}
       {hasError && (
@@ -257,6 +262,21 @@ export default function CheckOut({ step }: { step?: string }) {
   } | null>(null);
   const [couponError, setCouponError] = useState("");
 
+  const totalShippingCharge = cartItems.reduce((acc: number, edge: any) => {
+    const item = edge.node;
+    const type = item?.shipping_cost_type || "free";
+    const value = Number(item?.shipping_cost_value) || 0;
+    const qty = item?.quantity || 1;
+    const price = item.price || 0;
+
+    if (type === "fixed") {
+      return acc + (value * qty);
+    } else if (type === "percentage") {
+      return acc + ((price * value / 100) * qty);
+    }
+    return acc;
+  }, 0);
+
   const [formData, setFormData] = useState({
     fullName: "", contact: "", address: "",
     city: "", zip: "", landmark: "", emergency: "",
@@ -277,40 +297,56 @@ export default function CheckOut({ step }: { step?: string }) {
     return "";
   };
 
-  /* Update value + validate on change */
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    // If field was already touched, validate live
-    if (touched[name]) {
-      setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
+  const [focusedField, setFocusedField] = useState<string | null>(null);
+
+  /* Sync URL step parameter with local state */
+  useEffect(() => {
+    if (step === "payment") setCurrentStep(2);
+    else if (step === "review") setCurrentStep(3);
+    else setCurrentStep(1);
+  }, [step]);
+
+  /* Update value + validate on change — handles both typing and autofill */
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, name: keyof typeof formData) => {
+    try {
+      if (!e || !e.target) return;
+      const targetValue = e.target.value;
+      
+      setFormData((prev) => ({ ...prev, [name]: targetValue }));
+
+      // Process validation after state update to avoid blocking
+      if (touched[name] || targetValue.length > 2) {
+        const err = validateField(name, targetValue);
+        setErrors((prev) => {
+          if (prev[name] === err) return prev;
+          return { ...prev, [name]: err };
+        });
+      }
+    } catch (err) {
+      console.error(`[Checkout] handleChange error for ${name}:`, err);
     }
   };
 
   /* Mark field as touched + validate on blur */
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setTouched((prev) => ({ ...prev, [name]: true }));
-    setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
-  };
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>, name: keyof typeof formData) => {
+    try {
+      if (!e || !e.target) return;
+      const targetValue = e.target.value;
 
-  /* Prevent non-numeric input for phone/zip fields */
-  const handleNumericKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const allowed = ["Backspace", "Delete", "Tab", "ArrowLeft", "ArrowRight", "Home", "End", "+"];
-    if (!allowed.includes(e.key) && !/^\d$/.test(e.key)) {
-      e.preventDefault();
-      // Show explicit error so user knows WHY their typing is blocked
-      setErrors((prev) => ({ ...prev, [e.currentTarget.name]: `Only numbers are allowed in this field.` }));
+      setFocusedField(null);
+      setTouched((prev) => ({ ...prev, [name]: true }));
+      const err = validateField(name, targetValue);
+      setErrors((prev) => {
+        if (prev[name] === err) return prev;
+        return { ...prev, [name]: err };
+      });
+    } catch (err) {
+      console.error(`[Checkout] handleBlur error for ${name}:`, err);
     }
   };
 
-  /* Prevent numeric input for name/city fields */
-  const handleAlphaKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (/^\d$/.test(e.key)) {
-      e.preventDefault();
-      // Show inline error
-      setErrors((prev) => ({ ...prev, [e.currentTarget.name]: `Numbers are not allowed in this field.` }));
-    }
+  const handleFocus = (name: keyof typeof formData) => {
+    setFocusedField(name);
   };
 
   /* Validate all step-1 required fields */
@@ -417,7 +453,8 @@ export default function CheckOut({ step }: { step?: string }) {
         };
       });
 
-      const finalTotal = couponData?.final_total ?? subtotal;
+      const totalShipping = totalShippingCharge;
+      const finalTotal = (couponData?.final_total ?? subtotal) + totalShipping;
       const discountAmount = couponData?.discount_amount ?? 0;
 
       const response = await fetch("/api/orders", {
@@ -427,6 +464,7 @@ export default function CheckOut({ step }: { step?: string }) {
           shippingData: formData,
           cartItems: cartPayload,
           subtotal,
+          shippingCost: totalShipping,
           couponCode: couponData ? couponCode.toUpperCase() : null,
           discountAmount,
           finalTotal,
@@ -453,16 +491,6 @@ export default function CheckOut({ step }: { step?: string }) {
     { num: 2, label: "PAYMENT" },
     { num: 3, label: "SUMMARY" },
   ];
-
-  /* Shorthand to get props for each field */
-  const field = (name: keyof typeof formData) => ({
-    id: `co-${name}`,
-    name,
-    value: formData[name],
-    error: errors[name],
-    onChange: handleChange,
-    onBlur: handleBlur,
-  });
 
   return (
     <div style={{ background: "#F8FAFC", minHeight: "100vh", paddingTop: "40px", paddingBottom: "120px", fontFamily: "'Segoe UI', system-ui, sans-serif" }}>
@@ -542,35 +570,54 @@ export default function CheckOut({ step }: { step?: string }) {
                   <div>
                     <label style={S.label} htmlFor="co-fullName">Full Name <Req /></label>
                     <ValidatedInput
-                      {...field("fullName")}
+                      id="co-fullName"
+                      name="fullName"
+                      value={formData.fullName}
+                      error={errors.fullName}
+                      onChange={(e) => handleChange(e, "fullName")}
+                      onBlur={(e) => handleBlur(e, "fullName")}
+                      onFocus={() => handleFocus("fullName")}
+                      isFocused={focusedField === "fullName"}
                       placeholder="Ahmad Ali"
                       type="text"
                       autoComplete="name"
-                      onKeyDown={handleAlphaKeyDown}
                     />
-                    <div style={{ marginTop: "4px", fontSize: "11px", color: "#9ca3af" }}>Letters only — no numbers or symbols</div>
+                    <div style={{ marginTop: "4px", fontSize: "11px", color: "#9ca3af" }}>Full name as on CNIC</div>
                   </div>
 
                   {/* Contact */}
                   <div>
                     <label style={S.label} htmlFor="co-contact">Contact Number <Req /></label>
                     <ValidatedInput
-                      {...field("contact")}
+                      id="co-contact"
+                      name="contact"
+                      value={formData.contact}
+                      error={errors.contact}
+                      onChange={(e) => handleChange(e, "contact")}
+                      onBlur={(e) => handleBlur(e, "contact")}
+                      onFocus={() => handleFocus("contact")}
+                      isFocused={focusedField === "contact"}
                       placeholder="03001234567"
                       type="tel"
                       autoComplete="tel"
-                      maxLength={13}
-                      onKeyDown={handleNumericKeyDown}
+                      maxLength={15}
                       inputMode="numeric"
                     />
-                    <div style={{ marginTop: "4px", fontSize: "11px", color: "#9ca3af" }}>Numbers only — e.g. 03001234567</div>
+                    <div style={{ marginTop: "4px", fontSize: "11px", color: "#9ca3af" }}>e.g. 03001234567 or +923...</div>
                   </div>
 
                   {/* Address */}
                   <div>
                     <label style={S.label} htmlFor="co-address">Street Address <Req /></label>
                     <ValidatedInput
-                      {...field("address")}
+                      id="co-address"
+                      name="address"
+                      value={formData.address}
+                      error={errors.address}
+                      onChange={(e) => handleChange(e, "address")}
+                      onBlur={(e) => handleBlur(e, "address")}
+                      onFocus={() => handleFocus("address")}
+                      isFocused={focusedField === "address"}
                       placeholder="House #5, Street 3, Gulshan-e-Iqbal"
                       type="text"
                       autoComplete="street-address"
@@ -582,11 +629,17 @@ export default function CheckOut({ step }: { step?: string }) {
                     <div>
                       <label style={S.label} htmlFor="co-city">City <Req /></label>
                       <ValidatedInput
-                        {...field("city")}
+                        id="co-city"
+                        name="city"
+                        value={formData.city}
+                        error={errors.city}
+                        onChange={(e) => handleChange(e, "city")}
+                        onBlur={(e) => handleBlur(e, "city")}
+                        onFocus={() => handleFocus("city")}
+                        isFocused={focusedField === "city"}
                         placeholder="Karachi"
                         type="text"
                         autoComplete="address-level2"
-                        onKeyDown={handleAlphaKeyDown}
                       />
                     </div>
                     <div>
@@ -594,12 +647,18 @@ export default function CheckOut({ step }: { step?: string }) {
                         Zip Code <span style={{ color: "#9ca3af", fontStyle: "italic", fontWeight: 400, fontSize: "11px" }}>(optional)</span>
                       </label>
                       <ValidatedInput
-                        {...field("zip")}
+                        id="co-zip"
+                        name="zip"
+                        value={formData.zip}
+                        error={errors.zip}
+                        onChange={(e) => handleChange(e, "zip")}
+                        onBlur={(e) => handleBlur(e, "zip")}
+                        onFocus={() => handleFocus("zip")}
+                        isFocused={focusedField === "zip"}
                         placeholder="75500"
                         type="text"
                         maxLength={5}
                         inputMode="numeric"
-                        onKeyDown={handleNumericKeyDown}
                       />
                       <div style={{ marginTop: "4px", fontSize: "11px", color: "#9ca3af" }}>5 digits only</div>
                     </div>
@@ -609,7 +668,14 @@ export default function CheckOut({ step }: { step?: string }) {
                   <div>
                     <label style={S.label} htmlFor="co-landmark">Famous Landmark / Area <Req /></label>
                     <ValidatedInput
-                      {...field("landmark")}
+                      id="co-landmark"
+                      name="landmark"
+                      value={formData.landmark}
+                      error={errors.landmark}
+                      onChange={(e) => handleChange(e, "landmark")}
+                      onBlur={(e) => handleBlur(e, "landmark")}
+                      onFocus={() => handleFocus("landmark")}
+                      isFocused={focusedField === "landmark"}
                       placeholder="Near Dolmen Mall, Clifton"
                       type="text"
                     />
@@ -622,14 +688,20 @@ export default function CheckOut({ step }: { step?: string }) {
                       Emergency Contact <span style={{ color: "#9ca3af", fontStyle: "italic", fontWeight: 400, fontSize: "11px" }}>(optional)</span>
                     </label>
                     <ValidatedInput
-                      {...field("emergency")}
+                      id="co-emergency"
+                      name="emergency"
+                      value={formData.emergency}
+                      error={errors.emergency}
+                      onChange={(e) => handleChange(e, "emergency")}
+                      onBlur={(e) => handleBlur(e, "emergency")}
+                      onFocus={() => handleFocus("emergency")}
+                      isFocused={focusedField === "emergency"}
                       placeholder="03331234567"
                       type="tel"
-                      maxLength={13}
-                      onKeyDown={handleNumericKeyDown}
+                      maxLength={15}
                       inputMode="numeric"
                     />
-                    <div style={{ marginTop: "4px", fontSize: "11px", color: "#9ca3af" }}>Numbers only</div>
+                    <div style={{ marginTop: "4px", fontSize: "11px", color: "#9ca3af" }}>Secondary contact number</div>
                   </div>
 
                   {/* Error count banner */}
@@ -698,45 +770,72 @@ export default function CheckOut({ step }: { step?: string }) {
 
             {/* ── STEP 3 — Review ── */}
             {currentStep === 3 && (
-              <>
-                <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
-                  <div style={S.iconBox(40)}><IconCheck /></div>
-                  <div>
-                    <div style={{ fontSize: "20px", fontWeight: 700, color: "#111827" }}>Review Your Order</div>
-                    <div style={{ fontSize: "13px", color: "#9ca3af", marginTop: "2px" }}>Verify everything before placing.</div>
+              <div key="step3" style={{ animation: "fadeIn 0.4s ease-out" }}>
+                {cartItems.length === 0 ? (
+                  <div style={{ textAlign: "center", padding: "40px 0" }}>
+                    <div style={{ fontSize: "16px", color: "#6b7280", marginBottom: "16px" }}>Your cart is empty or loading...</div>
+                    <button
+                      onClick={() => router.push("/")}
+                      style={{ padding: "10px 20px", background: "#111827", color: "white", borderRadius: "8px", fontWeight: 600 }}
+                    >
+                      Return to Shop
+                    </button>
                   </div>
-                </div>
-
-                <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-                  <div style={{ padding: "18px", background: "#f9fafb", borderRadius: "12px", border: "1px solid #e5e7eb" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px", alignItems: "center" }}>
-                      <span style={{ fontWeight: 700, color: "#111827", fontSize: "14px" }}>📦 Shipping Details</span>
-                      <button onClick={() => setCurrentStep(1)} style={{ background: "none", border: "none", color: "#2563EB", fontWeight: 600, cursor: "pointer", fontSize: "13px", padding: 0 }}>Edit</button>
-                    </div>
-                    <div style={{ fontSize: "13px", color: "#6b7280", lineHeight: "1.8" }}>
-                      <strong style={{ color: "#374151", display: "block" }}>{formData.fullName}</strong>
-                      {formData.contact}
-                      <br />
-                      {formData.address}{formData.landmark ? `, near ${formData.landmark}` : ""}
-                      <br />
-                      {formData.city}{formData.zip ? ` — ${formData.zip}` : ""}
-                    </div>
-                  </div>
-                  <div style={{ padding: "18px", background: "#eff6ff", borderRadius: "12px", border: "2px solid #bfdbfe" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                ) : (
+                  <>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
+                      <div style={S.iconBox(40)}><IconCheck /></div>
                       <div>
-                        <div style={{ fontWeight: 700, color: "#111827", fontSize: "14px" }}>💵 Cash on Delivery (COD)</div>
-                        <div style={{ fontSize: "12px", color: "#6b7280", marginTop: "3px" }}>Pay when your order arrives.</div>
+                        <div style={{ fontSize: "20px", fontWeight: 700, color: "#111827" }}>Review Your Order</div>
+                        <div style={{ fontSize: "13px", color: "#9ca3af", marginTop: "2px" }}>Verify everything before placing.</div>
                       </div>
-                      <button onClick={() => setCurrentStep(2)} style={{ background: "none", border: "none", color: "#2563EB", fontWeight: 600, cursor: "pointer", fontSize: "13px", padding: 0 }}>Edit</button>
                     </div>
-                  </div>
-                </div>
 
-                <div style={{ marginTop: "20px" }}>
-                  <BackBtn onClick={() => setCurrentStep(2)}>Back</BackBtn>
-                </div>
-              </>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                      <div style={{ padding: "18px", background: "#f9fafb", borderRadius: "12px", border: "1px solid #e5e7eb" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px", alignItems: "center" }}>
+                          <span style={{ fontWeight: 700, color: "#111827", fontSize: "14px" }}>📦 Shipping Details</span>
+                          <button onClick={() => setCurrentStep(1)} style={{ background: "none", border: "none", color: "#2563EB", fontWeight: 600, cursor: "pointer", fontSize: "13px", padding: 0 }}>Edit</button>
+                        </div>
+                        <div style={{ fontSize: "13px", color: "#6b7280", lineHeight: "1.8" }}>
+                          <strong style={{ color: "#374151", display: "block" }}>{formData.fullName || "N/A"}</strong>
+                          {formData.contact || "N/A"}
+                          <br />
+                          {formData.address || "N/A"}{formData.landmark ? `, near ${formData.landmark}` : ""}
+                          <br />
+                          {formData.city || "N/A"}{formData.zip ? ` — ${formData.zip}` : ""}
+                        </div>
+                      </div>
+
+                      <div style={{ padding: "18px", background: "#eff6ff", borderRadius: "12px", border: "2px solid #bfdbfe" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <div>
+                            <div style={{ fontWeight: 700, color: "#111827", fontSize: "14px" }}>💵 Cash on Delivery (COD)</div>
+                            <div style={{ fontSize: "12px", color: "#6b7280", marginTop: "3px" }}>Pay when your order arrives.</div>
+                          </div>
+                          <button onClick={() => setCurrentStep(2)} style={{ background: "none", border: "none", color: "#2563EB", fontWeight: 600, cursor: "pointer", fontSize: "13px", padding: 0 }}>Edit</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{ marginTop: "24px", display: "flex", gap: "12px" }}>
+                      <button
+                        onClick={() => setCurrentStep(2)}
+                        style={{ padding: "12px 24px", border: "1.5px solid #e5e7eb", borderRadius: "10px", color: "#374151", fontWeight: 600, background: "white" }}
+                      >
+                        Back
+                      </button>
+                      <button
+                        onClick={handleCompleteOrder}
+                        disabled={isLoading}
+                        style={{ flex: 1, padding: "12px", background: "#111827", color: "white", borderRadius: "10px", fontWeight: 700, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
+                      >
+                        {isLoading ? "Placing Order..." : "Place Order Now"}
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
             )}
           </div>
 
@@ -754,7 +853,7 @@ export default function CheckOut({ step }: { step?: string }) {
                 const baseImage: any = safeParse(item?.baseImage);
                 const productImg = item?.image_url || baseImage?.small_image_url || "";
                 const productId = item?.product?.id || item?.product_id || item?.id || "";
-                const color = cartDetail.itemColors ? cartDetail.itemColors[productId] : null;
+                const color = cartDetail?.itemColors ? cartDetail.itemColors[productId] : null;
                 return (
                   <div key={idx} style={{ display: "flex", gap: "14px", alignItems: "center" }}>
                     <div style={{ width: "76px", height: "76px", borderRadius: "10px", background: "#1f2937", overflow: "hidden", flexShrink: 0, position: "relative" }}>
@@ -819,7 +918,12 @@ export default function CheckOut({ step }: { step?: string }) {
                           id="co-coupon"
                           style={{ flex: 1, padding: "10px 14px", fontSize: "13px", border: `1.5px solid ${couponError ? "#fca5a5" : "#e5e7eb"}`, borderRadius: "8px", outline: "none", fontFamily: "inherit", background: couponError ? "#fff5f5" : "#fff" }}
                           value={couponCode}
-                          onChange={(e) => { setCouponCode(e.target.value); if (couponError) setCouponError(""); }}
+                          onChange={(e) => {
+                          if (e.target) {
+                            setCouponCode(e.target.value);
+                            if (couponError) setCouponError("");
+                          }
+                        }}
                           placeholder="Enter promo code"
                           type="text"
                           onKeyDown={(e) => e.key === "Enter" && handleApplyCoupon()}
@@ -858,7 +962,11 @@ export default function CheckOut({ step }: { step?: string }) {
                   )}
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px" }}>
                     <span style={{ color: "#6b7280" }}>Shipping</span>
-                    <span style={{ color: "#16a34a", fontWeight: 600 }}>Free</span>
+                    {totalShippingCharge > 0 ? (
+                      <span style={{ color: "#374151", fontWeight: 700 }}>Rs {totalShippingCharge.toFixed(0)}</span>
+                    ) : (
+                      <span style={{ color: "#16a34a", fontWeight: 600 }}>Free</span>
+                    )}
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px" }}>
                     <span style={{ color: "#6b7280" }}>Payment</span>
@@ -875,7 +983,7 @@ export default function CheckOut({ step }: { step?: string }) {
                         Rs {subtotal?.toFixed(0)}
                       </div>
                     )}
-                    <Price amount={String(couponData?.final_total ?? subtotal ?? 0)} currencyCode="PKR" className="border-none font-extrabold text-xl text-gray-900" />
+                    <Price amount={String((couponData?.final_total ?? subtotal) + totalShippingCharge)} currencyCode="PKR" className="border-none font-extrabold text-xl text-gray-900" />
                   </div>
                 </div>
 

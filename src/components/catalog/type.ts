@@ -77,6 +77,8 @@ export interface ProductNode {
   orderCount?: number;
   quickAttributes?: Array<{ label: string; value: string; highlight?: boolean }>;
   colors?: { name: string; hex: string }[];
+  shipping_cost_type?: string;
+  shipping_cost_value?: number;
 }
 
 export interface ProductsResponse {
@@ -201,6 +203,8 @@ export interface ProductData {
   orderCount?: number;
   quickAttributes?: Array<{ label: string; value: string; highlight?: boolean }>;
   stock_status?: string;
+  shipping_cost_type?: string;
+  shipping_cost_value?: number;
 }
 
 export interface AttributeType {
