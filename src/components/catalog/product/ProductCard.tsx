@@ -79,7 +79,7 @@ export default function ProductCard({
       </div>
 
       {/* Product Information - Centered */}
-      <div className="text-center space-y-2 mb-4 flex-1 px-2">
+      <div className="text-center space-y-2 mb-4 flex-1 px-2 pt-4">
         <Link href={`/product/${urlKey}`}>
           <h3 className="font-headline font-bold text-base md:text-lg text-foreground hover:text-stone-700 dark:hover:text-stone-300 transition-colors line-clamp-2 min-h-[3rem]">
             {productName}
