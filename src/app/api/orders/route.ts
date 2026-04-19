@@ -73,6 +73,26 @@ export async function POST(req: NextRequest) {
       console.warn("Order items insert warning:", itemsError.message);
     }
 
+    // 3. Decrement available_qty for products
+    for (const item of cartItems) {
+      const isValidUUID = uuidRegex.test(item.productId || "");
+      if (isValidUUID && item.quantity > 0) {
+        const { data: productData } = await supabase
+          .from("products")
+          .select("available_qty")
+          .eq("id", item.productId)
+          .single();
+
+        if (productData && productData.available_qty !== null) {
+          const newQty = Math.max(0, productData.available_qty - item.quantity);
+          await supabase
+            .from("products")
+            .update({ available_qty: newQty })
+            .eq("id", item.productId);
+        }
+      }
+    }
+
     // 3. If coupon was used — record usage and increment used_count
     if (couponCode && discountAmount > 0) {
       const { data: couponRow } = await supabase

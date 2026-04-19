@@ -15,6 +15,8 @@ export default function OrdersPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [isUpdating, setIsUpdating] = useState(false);
+    const [isConfirmingCancel, setIsConfirmingCancel] = useState(false);
+    const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
 
@@ -30,7 +32,7 @@ export default function OrdersPage() {
             .select(`
                 *,
                 user:profiles!user_id(full_name, email, avatar_url),
-                items:order_items(id, quantity, unit_price, total_price, selected_color, product:products!product_id(name, image_url))
+                items:order_items(id, product_id, quantity, unit_price, total_price, selected_color, product:products!product_id(name, image_url))
             `)
             .order('created_at', { ascending: false });
 
@@ -44,18 +46,59 @@ export default function OrdersPage() {
 
     const handleUpdateStatus = async (orderId: string, newStatus: string) => {
         setIsUpdating(true);
-        const { error } = await supabase.from('orders').update({ status: newStatus }).eq('id', orderId);
-        if (error) {
-            alert("Failed to update status: " + error.message);
-        } else {
-            await logAdminAction(`Updated Order Status to ${newStatus}`, "Order", orderId);
-            const updatedOrders = orders.map(o => o.id === orderId ? { ...o, status: newStatus } : o);
-            setOrders(updatedOrders);
-            if (selectedOrder?.id === orderId) {
-                setSelectedOrder({ ...selectedOrder, status: newStatus });
+        try {
+            const { error } = await supabase.from('orders').update({ status: newStatus }).eq('id', orderId);
+            if (error) {
+                alert("Failed to update status: " + error.message);
+            } else {
+                // If cancelled, restore inventory
+                if (newStatus === 'CANCELLED' && selectedOrder?.items) {
+                    for (const item of selectedOrder.items) {
+                        const pid = item.product_id;
+                        const qty = item.quantity;
+                        if (pid && qty > 0) {
+                            // Get current qty
+                            const { data: pData } = await supabase.from('products').select('available_qty').eq('id', pid).single();
+                            if (pData) {
+                                const updatedQty = (pData.available_qty || 0) + qty;
+                                await supabase.from('products').update({ available_qty: updatedQty }).eq('id', pid);
+                            }
+                        }
+                    }
+                }
+
+                await logAdminAction(`Updated Order Status to ${newStatus}`, "Order", orderId);
+                const updatedOrders = orders.map(o => o.id === orderId ? { ...o, status: newStatus } : o);
+                setOrders(updatedOrders);
+                if (selectedOrder?.id === orderId) {
+                    setSelectedOrder({ ...selectedOrder, status: newStatus });
+                }
             }
+        } catch (err: any) {
+            alert("An error occurred: " + err.message);
+        } finally {
+            setIsUpdating(false);
         }
-        setIsUpdating(false);
+    };
+
+    const handleDeleteOrder = async (orderId: string) => {
+        setIsUpdating(true);
+        try {
+            // Delete order items first (if no cascade) though supabase usually cascades
+            const { error } = await supabase.from('orders').delete().eq('id', orderId);
+            if (error) {
+                alert("Failed to delete order: " + error.message);
+            } else {
+                await logAdminAction(`Deleted Order`, "Order", orderId);
+                setOrders(orders.filter(o => o.id !== orderId));
+                setSelectedOrder(null);
+                setIsConfirmingDelete(false);
+            }
+        } catch (err: any) {
+            alert("An error occurred: " + err.message);
+        } finally {
+            setIsUpdating(false);
+        }
     };
 
     const getAvatarText = (name?: string, email?: string) => {
@@ -312,7 +355,11 @@ export default function OrdersPage() {
             {/* Order Detail Slide-out */}
             <Drawer
                 open={selectedOrder !== null}
-                onClose={() => setSelectedOrder(null)}
+                onClose={() => {
+                    setSelectedOrder(null);
+                    setIsConfirmingCancel(false);
+                    setIsConfirmingDelete(false);
+                }}
                 title={selectedOrder ? `Order Details: ${selectedOrder.order_number}` : "Order Details"}
                 width="lg"
             >
@@ -387,8 +434,77 @@ export default function OrdersPage() {
                                         {isUpdating && <Loader2 className="h-3 w-3 animate-spin" />} Mark as Delivered
                                     </button>
                                 )}
-                                {(selectedOrder.status?.toUpperCase() === "CANCELLED" || selectedOrder.status?.toUpperCase() === "DELIVERED") && (
-                                    <p className="text-[13px] text-gray-500 text-center italic">No further actions required.</p>
+                                 {(selectedOrder.status?.toUpperCase() === "PENDING" || selectedOrder.status?.toUpperCase() === "PROCESSING") && (
+                                    <div className="space-y-2 mt-2">
+                                        {isConfirmingCancel ? (
+                                            <div className="bg-red-50 p-3 rounded-md border border-red-200">
+                                                <p className="text-[12px] text-red-700 font-medium mb-2">Are you sure? This will restore product inventory.</p>
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        disabled={isUpdating}
+                                                        onClick={() => {
+                                                            handleUpdateStatus(selectedOrder.id, 'CANCELLED');
+                                                            setIsConfirmingCancel(false);
+                                                        }}
+                                                        className="flex-1 py-1.5 bg-red-600 text-white text-[12px] font-bold rounded hover:bg-red-700 transition-colors disabled:opacity-50">
+                                                        {isUpdating ? "Cancelling..." : "Yes, Cancel Order"}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setIsConfirmingCancel(false)}
+                                                        className="flex-1 py-1.5 bg-white border border-gray-300 text-gray-700 text-[12px] font-medium rounded hover:bg-gray-50">
+                                                        No, Keep It
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                disabled={isUpdating}
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    setIsConfirmingCancel(true);
+                                                }}
+                                                className="w-full py-1.5 flex justify-center items-center gap-2 bg-red-100 text-red-600 text-[13px] font-medium rounded-md hover:bg-red-200 transition-colors disabled:opacity-50">
+                                                {isUpdating && <Loader2 className="h-3 w-3 animate-spin" />} Cancel Order
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
+                                 {selectedOrder.status?.toUpperCase() === "CANCELLED" && (
+                                    <div className="space-y-2 mt-2">
+                                        {isConfirmingDelete ? (
+                                            <div className="bg-red-50 p-3 rounded-md border border-red-200">
+                                                <p className="text-[12px] text-red-700 font-medium mb-2">Are you sure? This will PERMANENTLY delete the order record.</p>
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        disabled={isUpdating}
+                                                        onClick={() => handleDeleteOrder(selectedOrder.id)}
+                                                        className="flex-1 py-1.5 bg-red-600 text-white text-[12px] font-bold rounded hover:bg-red-700 transition-colors disabled:opacity-50">
+                                                        {isUpdating ? "Deleting..." : "Yes, Delete Forever"}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setIsConfirmingDelete(false)}
+                                                        className="flex-1 py-1.5 bg-white border border-gray-300 text-gray-700 text-[12px] font-medium rounded hover:bg-gray-50">
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                disabled={isUpdating}
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    setIsConfirmingDelete(true);
+                                                }}
+                                                className="w-full py-1.5 flex justify-center items-center gap-2 bg-red-600 text-white text-[13px] font-medium rounded-md hover:bg-red-700 transition-colors disabled:opacity-50">
+                                                {isUpdating && <Loader2 className="h-3 w-3 animate-spin" />} Delete Order Forever
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
+                                {(selectedOrder.status?.toUpperCase() === "DELIVERED") && (
+                                    <p className="text-[13px] text-gray-500 text-center italic mt-2">No further actions required.</p>
                                 )}
                             </div>
                         </div>

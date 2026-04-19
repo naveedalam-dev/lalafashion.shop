@@ -49,8 +49,10 @@ export const useAddProduct = () => {
     let productName = "Product";
     let productPrice = 0;
     let productImage = "";
-    let productSku = "";
+    let productSku = productId;
     let productSlug = productId;
+    let shippingType = "free";
+    let shippingValue = 0;
 
     try {
       const res = await fetch(`/api/product-details?id=${productId}`);
@@ -62,6 +64,8 @@ export const useAddProduct = () => {
           productImage = product.image_url || "";
           productSku = product.sku || productId;
           productSlug = product.slug || productId;
+          shippingType = product.shipping_cost_type || "free";
+          shippingValue = product.shipping_cost_value || 0;
         }
       }
     } catch (e) {
@@ -93,8 +97,14 @@ export const useAddProduct = () => {
               quantity: quantity,
               price: productPrice,
               baseImage: JSON.stringify({ small_image_url: productImage }),
-              product: { id: productId },
+              product: { 
+                 id: productId,
+                 shipping_cost_type: shippingType,
+                 shipping_cost_value: shippingValue
+              },
               product_id: productId,
+              shipping_cost_type: shippingType,
+              shipping_cost_value: shippingValue
             },
           },
         ],

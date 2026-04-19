@@ -23,6 +23,8 @@ function useOutsideClick(ref: React.RefObject<HTMLElement | null>, callback: () 
 }
 
 export default function Header() {
+    const [notifications, setNotifications] = useState<any[]>([]);
+    const [hasUnread, setHasUnread] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
     const [showUserMenu, setShowUserMenu] = useState(false);
     const { theme, setTheme } = useTheme();
@@ -32,7 +34,59 @@ export default function Header() {
 
     useEffect(() => {
         setMounted(true);
+        fetchInitialNotifications();
+
+        // Subscribe to NEW orders
+        const channel = supabase
+            .channel('admin_notifications')
+            .on(
+                'postgres_changes',
+                { event: 'INSERT', schema: 'public', table: 'orders' },
+                (payload) => {
+                    const newOrder = payload.new;
+                    const notification = {
+                        id: newOrder.id,
+                        order_number: newOrder.order_number,
+                        customer: newOrder.shipping_address ? newOrder.shipping_address.split(',')[0] : 'Guest',
+                        amount: newOrder.total_amount,
+                        created_at: newOrder.created_at,
+                        is_new: true
+                    };
+                    setNotifications(prev => [notification, ...prev].slice(0, 10));
+                    setHasUnread(true);
+                    
+                    // Optional: Play sound or toast
+                    if (typeof window !== "undefined") {
+                         // new Audio('/notification.mp3').play().catch(() => {}); 
+                    }
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, []);
+
+    const fetchInitialNotifications = async () => {
+        const { data, error } = await supabase
+            .from('orders')
+            .select('id, order_number, shipping_address, total_amount, created_at')
+            .order('created_at', { ascending: false })
+            .limit(10);
+
+        if (!error && data) {
+            const formatted = data.map(o => ({
+                id: o.id,
+                order_number: o.order_number,
+                customer: o.shipping_address ? o.shipping_address.split(',')[0] : 'Guest',
+                amount: o.total_amount,
+                created_at: o.created_at,
+                is_new: false
+            }));
+            setNotifications(formatted);
+        }
+    };
 
     const notifRef = useRef<HTMLDivElement>(null);
     const userRef = useRef<HTMLDivElement>(null);
@@ -48,6 +102,17 @@ export default function Header() {
         } else {
             console.error("Error signing out:", error.message);
         }
+    };
+
+    const formatTimeAgo = (dateStr: string) => {
+        const date = new Date(dateStr);
+        const now = new Date();
+        const diffInSecs = Math.floor((now.getTime() - date.getTime()) / 1000);
+        
+        if (diffInSecs < 60) return "Just now";
+        if (diffInSecs < 3600) return `${Math.floor(diffInSecs / 60)} mins ago`;
+        if (diffInSecs < 86400) return `${Math.floor(diffInSecs / 3600)} hours ago`;
+        return date.toLocaleDateString();
     };
 
     return (
@@ -92,31 +157,61 @@ export default function Header() {
                 {/* Notifications Dropdown */}
                 <div className="relative" ref={notifRef}>
                     <button
-                        onClick={() => setShowNotifications(!showNotifications)}
+                        onClick={() => {
+                            setShowNotifications(!showNotifications);
+                            setHasUnread(false);
+                        }}
                         className="relative p-1.5 text-gray-600 dark:text-gray-400 hover:bg-black/5 dark:hover:bg-white/5 rounded-md transition-colors"
                     >
                         <Bell className="h-5 w-5" />
-                        <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 border border-white dark:border-gray-900"></span>
+                        {hasUnread && (
+                            <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 border border-white dark:border-gray-900 animate-pulse"></span>
+                        )}
                     </button>
 
                     {showNotifications && (
                         <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden z-20 animate-in fade-in slide-in-from-top-2 duration-200">
                             <div className="p-3 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
-                                <span className="font-semibold text-sm text-gray-900 dark:text-white">Notifications</span>
-                                <button className="text-xs text-blue-600 dark:text-blue-400 hover:underline">Mark all read</button>
+                                <span className="font-semibold text-sm text-gray-900 dark:text-white">Recent Orders</span>
+                                <button 
+                                    onClick={() => setNotifications(notifications.map(n => ({...n, is_new: false})))}
+                                    className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
+                                >
+                                    Mark all read
+                                </button>
                             </div>
-                            <div className="max-h-64 overflow-y-auto">
-                                <div className="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 border-b border-gray-50 dark:border-gray-800 cursor-pointer">
-                                    <p className="text-sm text-gray-900 dark:text-gray-100"><span className="font-semibold">Order #12234</span> placed by Sarah.</p>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">2 mins ago</p>
-                                </div>
-                                <div className="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
-                                    <p className="text-sm text-gray-900 dark:text-gray-100">Low stock alert for <span className="font-semibold">Nike Air Max</span>.</p>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">1 hour ago</p>
-                                </div>
+                            <div className="max-h-80 overflow-y-auto">
+                                {notifications.length > 0 ? (
+                                    notifications.map((notif) => (
+                                        <Link 
+                                            key={notif.id}
+                                            href="/admin-login/orders" 
+                                            onClick={() => setShowNotifications(false)}
+                                            className={cn(
+                                                "block p-3 hover:bg-gray-50 dark:hover:bg-gray-800 border-b border-gray-50 dark:border-gray-800 transition-colors",
+                                                notif.is_new && "bg-blue-50/50 dark:bg-blue-900/10"
+                                            )}
+                                        >
+                                            <div className="flex justify-between items-start">
+                                                <p className="text-sm text-gray-900 dark:text-gray-100">
+                                                    <span className="font-bold text-blue-600 dark:text-blue-400">{notif.order_number}</span> placed by <span className="font-semibold">{notif.customer}</span>.
+                                                </p>
+                                                {notif.is_new && <span className="h-2 w-2 rounded-full bg-blue-500 mt-1"></span>}
+                                            </div>
+                                            <div className="flex justify-between items-center mt-1.5">
+                                                <p className="text-xs font-bold text-gray-700 dark:text-gray-300">Rs {notif.amount}</p>
+                                                <p className="text-[10px] text-gray-500 dark:text-gray-400">{formatTimeAgo(notif.created_at)}</p>
+                                            </div>
+                                        </Link>
+                                    ))
+                                ) : (
+                                    <div className="p-8 text-center text-gray-500 text-sm">
+                                        No recent orders
+                                    </div>
+                                )}
                             </div>
                             <div className="p-2 border-t border-gray-100 dark:border-gray-800 text-center">
-                                <Link href="/admin/activity" className="text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">View all activity</Link>
+                                <Link href="/admin-login/orders" className="text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">View all orders</Link>
                             </div>
                         </div>
                     )}
@@ -138,11 +233,11 @@ export default function Header() {
                                 <p className="text-xs text-gray-500 dark:text-gray-400 truncate">admin@lala-fashion.com</p>
                             </div>
                             <div className="p-1.5">
-                                <Link href="/admin/settings" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md">
+                                <Link href="/admin-login/settings" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md">
                                     <User className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                                     My Profile
                                 </Link>
-                                <Link href="/admin/settings" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md">
+                                <Link href="/admin-login/settings" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md">
                                     <Settings className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                                     Store Settings
                                 </Link>
@@ -163,3 +258,4 @@ export default function Header() {
         </header>
     );
 }
+

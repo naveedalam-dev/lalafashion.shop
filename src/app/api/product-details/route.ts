@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
         const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
         let query = supabase
             .from("products")
-            .select("id, name, slug, sku, mrp, sale_price, image_url, stock_status");
+            .select("id, name, slug, sku, mrp, sale_price, image_url, stock_status, shipping_cost_type, shipping_cost_value");
 
         if (uuidRegex.test(id)) {
             query = query.eq("id", id);

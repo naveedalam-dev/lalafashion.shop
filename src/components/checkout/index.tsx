@@ -261,13 +261,57 @@ export default function CheckOut({ step }: { step?: string }) {
     coupon_id?: string;
   } | null>(null);
   const [couponError, setCouponError] = useState("");
+  const [shippingInfoMap, setShippingInfoMap] = useState<Record<string, { type: string; value: number }>>({});
+
+  // Fetch missing shipping info for items
+  useEffect(() => {
+    const fetchMissingShipping = async () => {
+      const newMap = { ...shippingInfoMap };
+      let changed = false;
+
+      for (const edge of cartItems) {
+        const item = edge.node;
+        const productId = item?.product?.id || item?.product_id || item?.id;
+        
+        if (productId && !newMap[productId]) {
+          try {
+            const res = await fetch(`/api/product-details?id=${productId}`);
+            if (res.ok) {
+              const { product } = await res.json();
+              if (product) {
+                newMap[productId] = {
+                  type: product.shipping_cost_type || "free",
+                  value: Number(product.shipping_cost_value) || 0
+                };
+                changed = true;
+              }
+            }
+          } catch (e) {
+            console.error("Error fetching shipping info for", productId, e);
+          }
+        }
+      }
+
+      if (changed) {
+        setShippingInfoMap(newMap);
+      }
+    };
+
+    if (cartItems.length > 0) {
+      fetchMissingShipping();
+    }
+  }, [cartItems]);
 
   const totalShippingCharge = cartItems.reduce((acc: number, edge: any) => {
     const item = edge.node;
-    const type = item?.shipping_cost_type || "free";
-    const value = Number(item?.shipping_cost_value) || 0;
+    const productId = item?.product?.id || item?.product_id || item?.id;
+    const info = shippingInfoMap[productId];
+    
+    const product = item?.product || item;
+    const type = info?.type || product?.shipping_cost_type || item?.shipping_cost_type || "free";
+    const value = Number(info?.value || product?.shipping_cost_value || item?.shipping_cost_value) || 0;
     const qty = item?.quantity || 1;
-    const price = item.price || 0;
+    const price = item.price || product?.price || 0;
 
     if (type === "fixed") {
       return acc + (value * qty);
@@ -751,13 +795,17 @@ export default function CheckOut({ step }: { step?: string }) {
                       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </label>
-                  <div style={{ padding: "14px 16px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: "10px", display: "flex", gap: "10px", alignItems: "flex-start" }}>
-                    <svg width="16" height="16" fill="#16a34a" viewBox="0 0 20 20" style={{ flexShrink: 0, marginTop: "1px" }}>
+                  <div style={{ padding: "14px 16px", background: totalShippingCharge > 0 ? "#fffbeb" : "#f0fdf4", border: totalShippingCharge > 0 ? "1px solid #fef3c7" : "1px solid #bbf7d0", borderRadius: "10px", display: "flex", gap: "10px", alignItems: "flex-start" }}>
+                    <svg width="16" height="16" fill={totalShippingCharge > 0 ? "#b45309" : "#16a34a"} viewBox="0 0 20 20" style={{ flexShrink: 0, marginTop: "1px" }}>
                       <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                     </svg>
                     <div>
-                      <div style={{ fontSize: "13px", fontWeight: 600, color: "#15803d" }}>Free Delivery Included</div>
-                      <div style={{ fontSize: "12px", color: "#16a34a", marginTop: "2px" }}>No extra charges. Pay exactly what you see.</div>
+                      <div style={{ fontSize: "13px", fontWeight: 600, color: totalShippingCharge > 0 ? "#92400e" : "#15803d" }}>
+                        {totalShippingCharge > 0 ? `Delivery Charges: Rs ${totalShippingCharge.toFixed(0)}` : "Free Delivery Included"}
+                      </div>
+                      <div style={{ fontSize: "12px", color: totalShippingCharge > 0 ? "#b45309" : "#16a34a", marginTop: "2px" }}>
+                        {totalShippingCharge > 0 ? "Standard shipping rates applied based on your products." : "No extra charges. Pay exactly what you see."}
+                      </div>
                     </div>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", marginTop: "8px" }}>
