@@ -29,91 +29,96 @@ interface ProductItem {
     type: string;
 }
 
-function ThreeItemGridItem({ product, size, priority }: {
+// ── Single Product Card ───────────────────────────────────────────────────────
+function ProductCard({ product, priority, index }: {
     product: ProductItem;
-    size: 'full' | 'half';
     priority?: boolean;
+    index: number;
 }) {
+    const isCenter = index === 1;
+
     return (
-        <div
-            className={
-                size === 'full'
-                    ? 'md:col-span-4 md:row-span-2'
-                    : 'md:col-span-2 md:row-span-1'
-            }
+        <Link
+            href={`/product/${product.urlKey}`}
+            aria-label={product.name}
+            className={clsx(
+                "group relative block overflow-hidden rounded-2xl",
+                "transition-all duration-500",
+                // Center card is slightly taller for visual interest
+                isCenter ? "aspect-[3/4]" : "aspect-[3/4] md:aspect-[4/5]"
+            )}
         >
-            <Link
-                className="relative block h-full w-full"
-                href={`/product/${product.urlKey}`}
-                aria-label={`${product?.name}`}
-                style={{
-                    aspectRatio: size === 'full' ? '1018 / 800' : '502 / 393'
+            {/* Badge */}
+            <div className="absolute top-3 left-3 z-10">
+                <span className="inline-flex items-center gap-1 rounded-full bg-black/60 backdrop-blur-md px-2.5 py-1 text-[10px] font-semibold tracking-widest text-white uppercase">
+                    New
+                </span>
+            </div>
+
+            {/* Image */}
+            <GridTileImage
+                src={product.baseImageUrl}
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                fill
+                sizes="(min-width: 768px) 33vw, 100vw"
+                priority={priority}
+                alt={product.name}
+                label={{
+                    position: "bottom",
+                    title: product.name,
+                    amount: String(product.specialPrice || product.price || '0'),
+                    originalAmount: product.specialPrice ? String(product.price) : undefined,
+                    currencyCode: 'PKR',
                 }}
-            >
-                <GridTileImage
-                    src={product.baseImageUrl}
-                    className="object-cover "
-                    fill
-                    sizes={
-                        size === 'full'
-                            ? '(min-width: 768px) 66vw, 100vw'
-                            : '(min-width: 768px) 33vw, 100vw'
-                    }
-                    priority={priority}
-                    alt={product.name}
-                    label={{
-                        position: size === 'full' ? 'center' : 'bottom',
-                        title: product.name,
-                        amount: String(product.specialPrice || product.price || '0'),
-                        originalAmount: product.specialPrice ? String(product.price) : undefined,
-                        currencyCode: 'PKR',
-                    }}
-                />
-            </Link>
-        </div>
+            />
+
+            {/* Hover shine effect */}
+            <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-white/5 via-transparent to-transparent" />
+        </Link>
     );
 }
 
-
-function MobileThreeItemGridItem({ product, size, priority }: {
+// ── Mobile Card ───────────────────────────────────────────────────────────────
+function MobileProductCard({ product, priority, featured }: {
     product: ProductItem;
-    size: 'full' | 'half';
     priority?: boolean;
+    featured?: boolean;
 }) {
-
     return (
-        <div
-            className={
-                size === 'full' ? 'col-span-1 xxs:col-span-2 order-2' : 'col-span-1'
-            }
+        <Link
+            href={`/product/${product.urlKey}`}
+            aria-label={product.name}
+            className={clsx(
+                "group relative block overflow-hidden rounded-xl",
+                featured ? "col-span-2 aspect-[16/9]" : "col-span-1 aspect-square"
+            )}
         >
-            <Link
-                className={clsx(
-                    "relative block h-full w-full aspect-[380/280]",
-                    size === "half" && "xxs:aspect-[182/280]"
-                )}
-                href={`/product/${product.urlKey}`}
-                aria-label={`${product?.name}`}
-            >
-                <GridTileImage
-                    src={product.baseImageUrl}
-                    className="object-cover "
-                    fill
-                    priority={priority}
-                    alt={product.name}
-                    label={{
-                        position: size === 'full' ? 'center' : 'bottom',
-                        title: product.name,
-                        amount: String(product.specialPrice || product.price || '0'),
-                        originalAmount: product.specialPrice ? String(product.price) : undefined,
-                        currencyCode: 'PKR',
-                    }}
-                />
-            </Link>
-        </div>
+            {/* Badge */}
+            <div className="absolute top-2 left-2 z-10">
+                <span className="inline-flex items-center rounded-full bg-black/60 backdrop-blur-md px-2 py-0.5 text-[9px] font-bold tracking-widest text-white uppercase">
+                    New
+                </span>
+            </div>
+
+            <GridTileImage
+                src={product.baseImageUrl}
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                fill
+                priority={priority}
+                alt={product.name}
+                label={{
+                    position: "bottom",
+                    title: product.name,
+                    amount: String(product.specialPrice || product.price || '0'),
+                    originalAmount: product.specialPrice ? String(product.price) : undefined,
+                    currencyCode: 'PKR',
+                }}
+            />
+        </Link>
     );
 }
 
+// ── Main Export ───────────────────────────────────────────────────────────────
 export const ThreeItemGrid: FC<ThreeItemGridProps> = ({ title, description, products }) => {
     if (!products || products.length < 3) return null;
 
@@ -121,8 +126,9 @@ export const ThreeItemGrid: FC<ThreeItemGridProps> = ({ title, description, prod
 
     return (
         <section className="pt-8 sm:pt-12 lg:pt-20">
-            <div className="md:max-w-4.5xl mx-auto mb-10 w-auto px-0 text-center md:px-36">
-                <h1 className="mb-4 font-outfit text-xl md:text-4xl font-semibold text-black dark:text-white">
+            {/* Section Header */}
+            <div className="mx-auto mb-10 w-auto px-0 text-center">
+                <h1 className="mb-3 font-outfit text-xl md:text-4xl font-semibold text-black dark:text-white">
                     {title}
                 </h1>
                 <p className="text-sm md:text-base font-normal text-black/60 dark:text-neutral-300">
@@ -130,20 +136,21 @@ export const ThreeItemGrid: FC<ThreeItemGridProps> = ({ title, description, prod
                 </p>
             </div>
 
-            <div className="hidden md:grid gap-4 md:grid-cols-6 md:grid-rows-2">
-                <ThreeItemGridItem product={firstProduct} size="full" priority={true} />
-                <ThreeItemGridItem product={secondProduct} size="half" priority={true} />
-                <ThreeItemGridItem product={thirdProduct} size="half" />
+            {/* Desktop: Equal 3-column layout */}
+            <div className="hidden md:grid grid-cols-3 gap-5 items-end">
+                <ProductCard product={firstProduct} priority={true} index={0} />
+                <ProductCard product={secondProduct} priority={true} index={1} />
+                <ProductCard product={thirdProduct} priority={false} index={2} />
             </div>
 
-            <div className="grid md:hidden gap-4 grid-cols-1 xxs:grid-cols-2">
-                <ThreeItemGridItem product={firstProduct} size="full" priority={true} />
-                <ThreeItemGridItem product={secondProduct} size="half" priority={true} />
-                <ThreeItemGridItem product={thirdProduct} size="half" />
+            {/* Mobile: Featured top + 2 below */}
+            <div className="grid md:hidden grid-cols-2 gap-3">
+                <MobileProductCard product={firstProduct} priority={true} featured={true} />
+                <MobileProductCard product={secondProduct} priority={true} featured={false} />
+                <MobileProductCard product={thirdProduct} priority={false} featured={false} />
             </div>
         </section>
     );
 };
 
 export default ThreeItemGrid;
-

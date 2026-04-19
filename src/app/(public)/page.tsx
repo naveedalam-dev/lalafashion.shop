@@ -1,7 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import ImageCarousel from "@components/home/ImageCarousel";
 import ProductCarousel from "@components/home/ProductCarousel";
-import CategoryCarousel from "@components/home/CategoryCarousel";
 import { MobileSearchBar } from "@components/layout/navbar/MobileSearch";
 import type { Metadata } from "next";
 
@@ -61,21 +60,14 @@ export default async function Home() {
     .eq('is_featured', true)
     .order('featured_order', { ascending: true });
 
-  // 3. Fetch Categories
-  const { data: categories } = await supabase
-    .from('homepage_categories')
-    .select('*')
-    .eq('is_active', true)
-    .order('display_order', { ascending: true });
-
-  // 4. Fetch New Products
+  // 3. Fetch New Products
   const { data: newProducts } = await supabase
     .from('products')
     .select('*, product_reviews(rating)')
     .order('created_at', { ascending: false })
     .limit(10);
 
-  // 5. Fetch Popular Products
+  // 4. Fetch Popular Products
   const { data: popularProducts } = await supabase
     .from('products')
     .select('*, product_reviews(rating)')
@@ -123,10 +115,6 @@ export default async function Home() {
         
         {featuredProducts && featuredProducts.length > 0 && (
           <ProductCarousel title="Featured Products" products={mapProducts(featuredProducts)} layout="carousel" />
-        )}
-
-        {categories && categories.length > 0 && (
-          <CategoryCarousel categories={categories} />
         )}
 
         {newProducts && newProducts.length > 0 && (
