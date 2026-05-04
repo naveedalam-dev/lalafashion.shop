@@ -70,7 +70,7 @@ export default function RootLayout({
               url: "https://www.lalafashion.store",
               logo: {
                 "@type": "ImageObject",
-                url: "https://www.lalafashion.store/og-image.png",
+                url: "https://www.lalafashion.store/Logo.png",
                 width: 200,
                 height: 60,
               },
