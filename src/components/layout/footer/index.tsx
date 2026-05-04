@@ -112,8 +112,9 @@ export default async function Footer() {
                   <li><Link href="/terms" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Terms & Conditions</Link></li>
                   <li><Link href="/disclaimer" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Disclaimer</Link></li>
                   <li><Link href="/privacy-policy" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Privacy Policy</Link></li>
-                  <li><Link href="/return-policy" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Return Policy</Link></li>
-                  <li><Link href="/shipment-policy" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Shipment Policy</Link></li>
+                  <li><Link href="/return-policy" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Refund & Return Policy</Link></li>
+                  <li><Link href="/shipment-policy" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Delivery Policy</Link></li>
+                  <li><Link href="/cancellation-policy" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Cancellation Policy</Link></li>
                   <li><Link href="/data-policy" className="hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors duration-300">Data Policy</Link></li>
                 </ul>
               </div>

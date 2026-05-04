@@ -7,6 +7,7 @@ import { SpeculationRules } from "@components/theme/SpeculationRules";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import clsx from "clsx";
 import { cn } from "@/lib/utils";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 const notoSerif = Noto_Serif({ subsets: ["latin"], variable: "--font-noto-serif", weight: ["400", "700"] });
@@ -124,6 +125,7 @@ export default function RootLayout({
           <ErrorBoundary>
             <GlobalProviders>
               {children}
+              <WhatsAppButton />
             </GlobalProviders>
             <SpeculationRules />
           </ErrorBoundary>

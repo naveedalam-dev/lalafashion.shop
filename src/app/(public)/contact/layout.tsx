@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Contact Us | LALA Fashion",
-  description: "Get in touch with the LALA Fashion team. Reach us by phone, email, or visit our studio in Islamabad.",
+  description: "Get in touch with the LALA Fashion team. Reach us by phone, email, or visit our store in Rawalpindi.",
   alternates: { canonical: "https://www.lalafashion.store/contact" },
   openGraph: {
     title: "Contact Us | LALA Fashion",
-    description: "Get in touch with the LALA Fashion team. Reach us by phone, email, or visit our studio in Islamabad.",
+    description: "Get in touch with the LALA Fashion team. Reach us by phone, email, or visit our store in Rawalpindi.",
     url: "https://www.lalafashion.store/contact",
     siteName: "LALA Fashion",
     type: "website",

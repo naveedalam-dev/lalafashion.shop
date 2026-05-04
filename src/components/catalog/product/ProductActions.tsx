@@ -5,7 +5,7 @@ import { useState } from "react";
 import { getVariantInfo } from "@utils/hooks/useVariantInfo";
 import { useSearchParams } from "next/navigation";
 import { safeParse } from "@utils/helper";
-import { HeartIcon, ShareIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { ShareIcon, CheckIcon } from "@heroicons/react/24/outline";
 
 export function ProductActions({
     product,
@@ -19,7 +19,6 @@ export function ProductActions({
     ) || []) as never[];
     const searchParams = useSearchParams();
     const [userInteracted, setUserInteracted] = useState(false);
-    const [saved, setSaved] = useState(false);
     const [copied, setCopied] = useState(false);
     const [selectedColors, setSelectedColors] = useState<{ name: string; hex: string }[]>([]);
     const [quantity, setQuantity] = useState(1);
@@ -123,20 +122,6 @@ export function ProductActions({
                         }
                     }}
                 />
-
-                {/* Save */}
-                <button
-                    onClick={() => setSaved((s) => !s)}
-                    aria-label="Save to wishlist"
-                    className={`flex items-center justify-center w-11 h-11 rounded-full border transition-all duration-200 shrink-0 ${saved
-                        ? "border-red-400 bg-red-50 text-red-500 dark:bg-red-900/20 dark:border-red-500"
-                        : "border-neutral-300 dark:border-neutral-600 text-neutral-500 dark:text-neutral-400 hover:border-neutral-400"
-                        }`}
-                >
-                    <HeartIcon
-                        className={`h-5 w-5 ${saved ? "stroke-red-500 fill-red-100" : ""}`}
-                    />
-                </button>
 
                 {/* Share */}
                 <button

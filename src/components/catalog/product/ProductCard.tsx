@@ -67,15 +67,6 @@ export default function ProductCard({
           </div>
         )}
 
-        {/* Favorite Button */}
-        <button 
-          className="absolute top-4 right-4 w-10 h-10 bg-white/90 dark:bg-stone-700/80 backdrop-blur-sm dark:text-stone-300 rounded-full flex items-center justify-center shadow-md hover:text-red-500 dark:hover:text-red-400 transition-colors z-10 text-stone-400 group/fav"
-          aria-label="Add to Favorites"
-        >
-          <svg className="w-5 h-5 group-hover/fav:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-          </svg>
-        </button>
       </div>
 
       {/* Product Information - Centered */}

@@ -15,16 +15,28 @@ import {
 
 const faqs = [
     {
-        question: "How long does delivery take within Pakistan?",
-        answer: "Standard delivery across Pakistan takes 3-5 business days. Express delivery in Islamabad and Rawalpindi is available for same-day or next-day arrival."
+        question: "Delivery kitne din me hoti hai?",
+        answer: "Delivery usually 3 to 5 working days me ho jati hai."
     },
     {
-        question: "What is your return policy for luxury items?",
-        answer: "We offer a 7-day easy return policy for products in their original, unused condition with all tags and packaging intact. Electronic items and accessories must be unopened to qualify for a return."
+        question: "Kya product same hota hai jo website par dikhaya jata hai?",
+        answer: "Ji haan, hum 100% same product deliver karte hain (design, color, size, brand)."
     },
     {
-        question: "Do you offer international shipping?",
-        answer: "Yes, we ship our luxury collections worldwide. International shipping times and costs vary by country and will be calculated at checkout."
+        question: "Kya parcel open karke check kar sakte hain?",
+        answer: "Haan, jahan applicable ho wahan inspection allowed hoti hai."
+    },
+    {
+        question: "Return policy kya hai?",
+        answer: "Customer sirf delivery charges pay karega, product cost refund ho jati hai (conditions apply)."
+    },
+    {
+        question: "Order cancel kaise karein?",
+        answer: "Dispatch se pehle WhatsApp ya email ke through cancel kar sakte hain."
+    },
+    {
+        question: "Order track kaise karein?",
+        answer: "Visit our track order page: https://www.lalafashion.store/track-order"
     }
 ];
 
@@ -217,10 +229,10 @@ const ContactPage = () => {
                                         <MapPin className="w-6 h-6" />
                                     </div>
                                     <div>
-                                        <p className="font-bold text-gray-900 dark:text-white">Visit Our Studio</p>
+                                        <p className="font-bold text-gray-900 dark:text-white">Visit Our Store</p>
                                         <p className="text-sm text-gray-500 dark:text-neutral-400 leading-relaxed">
-                                            Shams Colony H-13, Islamabad<br />
-                                            Pindora Chungi Chowk, Rawalpindi
+                                            PD 145, Ground Floor, Main Street,<br />
+                                            Pindora Chungi, Rawalpindi
                                         </p>
                                     </div>
                                 </div>
@@ -244,7 +256,7 @@ const ContactPage = () => {
                                     <div>
                                         <p className="font-bold text-gray-900 dark:text-white">Email Us</p>
                                         <p className="text-sm text-gray-500 dark:text-neutral-400 leading-relaxed">
-                                            contact@lalafashion.store
+                                            support@lalafashion.store
                                         </p>
                                     </div>
                                 </div>

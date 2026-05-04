@@ -6,44 +6,28 @@ import Link from "next/link";
 
 const faqs = [
     {
-        question: "Is there a free trial available?",
-        answer: "Yes, you can try us for free for 30 days. If you want, we'll provide you with a free 30-minute onboarding call to get you up and running."
+        question: "Delivery kitne din me hoti hai?",
+        answer: "Delivery usually 3 to 5 working days me ho jati hai."
     },
     {
-        question: "Can I change my plan later?",
-        answer: "Yes, you can upgrade or downgrade your plan at any time from your account settings. The changes will be applied practically instantly."
+        question: "Kya product same hota hai jo website par dikhaya jata hai?",
+        answer: "Ji haan, hum 100% same product deliver karte hain (design, color, size, brand)."
     },
     {
-        question: "What is your cancellation policy?",
-        answer: "You can cancel your subscription at any time. Once cancelled, you will still have access to the service until the end of your current billing period."
+        question: "Kya parcel open karke check kar sakte hain?",
+        answer: "Haan, jahan applicable ho wahan inspection allowed hoti hai."
     },
     {
-        question: "Can other info be added to an invoice?",
-        answer: "Yes, you can add your company name, VAT number, and address to your invoices from the billing section of your dashboard."
+        question: "Return policy kya hai?",
+        answer: "Customer sirf delivery charges pay karega, product cost refund ho jati hai (conditions apply)."
     },
     {
-        question: "How does billing work?",
-        answer: "We bill you at the beginning of each billing cycle (monthly or yearly). Your invoices are automatically generated and sent to your email."
+        question: "Order cancel kaise karein?",
+        answer: "Dispatch se pehle WhatsApp ya email ke through cancel kar sakte hain."
     },
     {
-        question: "How do I change my account email?",
-        answer: "You can change your account email from the security settings. You will need to verify the new email address before the change takes effect."
-    },
-    {
-        question: "How does support work?",
-        answer: "Our support team is available 24/7 via live chat and email. We usually respond within 2 hours for priority inquiries."
-    },
-    {
-        question: "Do you provide tutorials?",
-        answer: "Yes, we have a comprehensive library of video tutorials and documentation articles to help you master our platform."
-    },
-    {
-        question: "Can I use it for multiple projects?",
-        answer: "Depending on your plan, you can manage multiple projects from a single account. Higher-tier plans offer unlimited projects."
-    },
-    {
-        question: "Do I need a team license?",
-        answer: "If you want to collaborate with teammates, we recommend our Team or Enterprise plans which offer advanced permission management."
+        question: "Order track kaise karein?",
+        answer: "https://www.lalafashion.store/track-order"
     }
 ];
 

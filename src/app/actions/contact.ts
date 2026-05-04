@@ -18,9 +18,9 @@ export async function getInquiries() {
 export async function updateInquiryStatus(id: string, status: string) {
     const supabase = await createClient();
     const { error } = await supabase
-        .rpc("update_inquiry_status_admin", { 
-            inquiry_id: id, 
-            new_status: status 
+        .rpc("update_inquiry_status_admin", {
+            inquiry_id: id,
+            new_status: status
         });
 
     if (error) {
@@ -34,8 +34,8 @@ export async function updateInquiryStatus(id: string, status: string) {
 export async function deleteInquiryAction(id: string) {
     const supabase = await createClient();
     const { error } = await supabase
-        .rpc("delete_inquiry_admin", { 
-            inquiry_id: id 
+        .rpc("delete_inquiry_admin", {
+            inquiry_id: id
         });
 
     if (error) {
