@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 
 const navigation = [
-    { name: "Dashboard", href: "/admin-login", icon: LayoutDashboard },
+    { name: "Dashboard", href: "/admin-login/dashboard", icon: LayoutDashboard },
     { name: "Products", href: "/admin-login/products", icon: Package },
     { name: "Categories", href: "/admin-login/categories", icon: Layers },
     // Homepage Sections
@@ -49,15 +49,15 @@ export default function Sidebar() {
     return (
         <div className="hidden md:flex h-full w-[240px] flex-col bg-[#ebebeb] dark:bg-[#09090b] border-r border-[#e5e5e5] dark:border-gray-800 shrink-0 transition-colors">
             <div className="flex h-16 items-center px-4 border-b border-transparent dark:border-gray-800">
-                <Link href="/admin-login" className="flex items-center gap-2">
+                <Link href="/admin-login/dashboard" className="flex items-center gap-2">
                     <Image src="/Logo.png" alt="Store Logo" width={110} height={32} className="object-contain dark:invert" priority />
                 </Link>
             </div>
 
             <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
                 {navigation.map((item) => {
-                    const isDashboard = item.href === "/admin-login";
-                    const isActive = isDashboard ? pathname === "/admin-login" : pathname?.startsWith(item.href);
+                    const isDashboard = item.href === "/admin-login/dashboard";
+                    const isActive = isDashboard ? pathname === "/admin-login/dashboard" : pathname?.startsWith(item.href);
 
                     return (
                         <Link

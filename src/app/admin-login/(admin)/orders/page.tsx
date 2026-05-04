@@ -10,6 +10,7 @@ export default function OrdersPage() {
     const supabase = createClient();
     const [activeTab, setActiveTab] = useState("all");
     const [selectedOrder, setSelectedOrder] = useState<any>(null);
+    const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>([]);
 
     const [orders, setOrders] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -92,12 +93,46 @@ export default function OrdersPage() {
                 await logAdminAction(`Deleted Order`, "Order", orderId);
                 setOrders(orders.filter(o => o.id !== orderId));
                 setSelectedOrder(null);
+                setSelectedOrderIds(prev => prev.filter(id => id !== orderId));
                 setIsConfirmingDelete(false);
             }
         } catch (err: any) {
             alert("An error occurred: " + err.message);
         } finally {
             setIsUpdating(false);
+        }
+    };
+
+    const handleBulkDelete = async () => {
+        if (!confirm(`Are you sure you want to permanently delete ${selectedOrderIds.length} selected order(s)?`)) return;
+        setIsUpdating(true);
+        try {
+            const { error } = await supabase.from('orders').delete().in('id', selectedOrderIds);
+            if (error) throw error;
+            await logAdminAction(`Deleted ${selectedOrderIds.length} orders in bulk`, "Order", "Bulk");
+            setOrders(orders.filter(o => !selectedOrderIds.includes(o.id)));
+            setSelectedOrderIds([]);
+        } catch (err: any) {
+            alert("Failed to delete orders: " + err.message);
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.checked) {
+            setSelectedOrderIds(filteredOrders.map(o => o.id));
+        } else {
+            setSelectedOrderIds([]);
+        }
+    };
+
+    const handleSelectRow = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
+        e.stopPropagation();
+        if (e.target.checked) {
+            setSelectedOrderIds(prev => [...prev, id]);
+        } else {
+            setSelectedOrderIds(prev => prev.filter(item => item !== id));
         }
     };
 
@@ -198,6 +233,15 @@ export default function OrdersPage() {
                     <p className="text-sm text-gray-500 mt-1">Manage and track customer orders.</p>
                 </div>
                 <div className="flex items-center gap-2">
+                    {selectedOrderIds.length > 0 && (
+                        <button
+                            onClick={handleBulkDelete}
+                            disabled={isUpdating}
+                            className="flex items-center gap-1.5 bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-md text-sm font-medium shadow-sm transition-colors disabled:opacity-50">
+                            {isUpdating ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                            Delete Selected ({selectedOrderIds.length})
+                        </button>
+                    )}
                     <button
                         onClick={handleExportCSV}
                         className="flex items-center gap-1.5 bg-white border border-[#c9c9c9] hover:bg-gray-50 text-gray-700 px-3 py-1.5 rounded-md text-sm font-medium shadow-sm transition-colors">
@@ -269,7 +313,12 @@ export default function OrdersPage() {
                         <thead>
                             <tr className="bg-white text-[11px] uppercase tracking-wider text-gray-500 border-b border-gray-100">
                                 <th className="px-5 py-3 font-medium w-10">
-                                    <input type="checkbox" className="rounded border-gray-300 text-gray-900 focus:ring-gray-900" />
+                                    <input 
+                                        type="checkbox" 
+                                        checked={selectedOrderIds.length === filteredOrders.length && filteredOrders.length > 0}
+                                        onChange={handleSelectAll}
+                                        className="rounded border-gray-300 text-gray-900 focus:ring-gray-900" 
+                                    />
                                 </th>
                                 <th className="px-5 py-3 font-medium">Order ID</th>
                                 <th className="px-5 py-3 font-medium">Customer</th>
@@ -295,7 +344,12 @@ export default function OrdersPage() {
                             ) : filteredOrders.map((order) => (
                                 <tr key={order.id} className="hover:bg-gray-50 transition-colors group cursor-pointer" onClick={() => setSelectedOrder(order)}>
                                     <td className="px-5 py-4" onClick={(e) => e.stopPropagation()}>
-                                        <input type="checkbox" className="rounded border-gray-300 text-gray-900 focus:ring-gray-900" />
+                                        <input 
+                                            type="checkbox" 
+                                            checked={selectedOrderIds.includes(order.id)}
+                                            onChange={(e) => handleSelectRow(e, order.id)}
+                                            className="rounded border-gray-300 text-gray-900 focus:ring-gray-900" 
+                                        />
                                     </td>
                                     <td className="px-5 py-4 font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
                                         {order.order_number}
@@ -410,71 +464,32 @@ export default function OrdersPage() {
                                         <div className={`h-4 w-4 rounded-full border border-white ${selectedOrder.status?.toUpperCase() === 'SHIPPED' || selectedOrder.status?.toUpperCase() === 'DELIVERED' ? 'bg-teal-500' : 'bg-gray-300'}`}></div>
                                     </div>
                                 </div>
-                                {selectedOrder.status?.toUpperCase() === "PENDING" && (
-                                    <button
-                                        disabled={isUpdating}
-                                        onClick={() => handleUpdateStatus(selectedOrder.id, 'PROCESSING')}
-                                        className="w-full py-1.5 flex justify-center items-center gap-2 bg-gray-900 text-white text-[13px] font-medium rounded-md hover:bg-gray-800 transition-colors disabled:opacity-50">
-                                        {isUpdating && <Loader2 className="h-3 w-3 animate-spin" />}  Mark as Processing
-                                    </button>
-                                )}
-                                {selectedOrder.status?.toUpperCase() === "PROCESSING" && (
-                                    <button
-                                        disabled={isUpdating}
-                                        onClick={() => handleUpdateStatus(selectedOrder.id, 'SHIPPED')}
-                                        className="w-full py-1.5 flex justify-center items-center gap-2 bg-teal-600 text-white text-[13px] font-medium rounded-md hover:bg-teal-700 transition-colors disabled:opacity-50">
-                                        {isUpdating && <Loader2 className="h-3 w-3 animate-spin" />} Mark as Shipped
-                                    </button>
-                                )}
-                                {selectedOrder.status?.toUpperCase() === "SHIPPED" && (
-                                    <button
-                                        disabled={isUpdating}
-                                        onClick={() => handleUpdateStatus(selectedOrder.id, 'DELIVERED')}
-                                        className="w-full py-1.5 flex justify-center items-center gap-2 bg-green-600 text-white text-[13px] font-medium rounded-md hover:bg-green-700 transition-colors disabled:opacity-50">
-                                        {isUpdating && <Loader2 className="h-3 w-3 animate-spin" />} Mark as Delivered
-                                    </button>
-                                )}
-                                 {(selectedOrder.status?.toUpperCase() === "PENDING" || selectedOrder.status?.toUpperCase() === "PROCESSING") && (
-                                    <div className="space-y-2 mt-2">
-                                        {isConfirmingCancel ? (
-                                            <div className="bg-red-50 p-3 rounded-md border border-red-200">
-                                                <p className="text-[12px] text-red-700 font-medium mb-2">Are you sure? This will restore product inventory.</p>
-                                                <div className="flex gap-2">
-                                                    <button
-                                                        disabled={isUpdating}
-                                                        onClick={() => {
-                                                            handleUpdateStatus(selectedOrder.id, 'CANCELLED');
-                                                            setIsConfirmingCancel(false);
-                                                        }}
-                                                        className="flex-1 py-1.5 bg-red-600 text-white text-[12px] font-bold rounded hover:bg-red-700 transition-colors disabled:opacity-50">
-                                                        {isUpdating ? "Cancelling..." : "Yes, Cancel Order"}
-                                                    </button>
-                                                    <button
-                                                        onClick={() => setIsConfirmingCancel(false)}
-                                                        className="flex-1 py-1.5 bg-white border border-gray-300 text-gray-700 text-[12px] font-medium rounded hover:bg-gray-50">
-                                                        No, Keep It
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <button
+                                <div className="space-y-3">
+                                    <div>
+                                        <label className="text-[11px] uppercase tracking-wider text-gray-500 font-semibold mb-1.5 block">Update Status</label>
+                                        <div className="relative">
+                                            <select 
+                                                value={selectedOrder.status?.toUpperCase() || 'PENDING'}
+                                                onChange={(e) => handleUpdateStatus(selectedOrder.id, e.target.value)}
                                                 disabled={isUpdating}
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    e.stopPropagation();
-                                                    setIsConfirmingCancel(true);
-                                                }}
-                                                className="w-full py-1.5 flex justify-center items-center gap-2 bg-red-100 text-red-600 text-[13px] font-medium rounded-md hover:bg-red-200 transition-colors disabled:opacity-50">
-                                                {isUpdating && <Loader2 className="h-3 w-3 animate-spin" />} Cancel Order
-                                            </button>
-                                        )}
+                                                className="w-full h-9 rounded-md border border-[#c9c9c9] text-[13px] pl-3 pr-8 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all bg-white disabled:opacity-50 font-medium text-gray-900 appearance-none cursor-pointer"
+                                            >
+                                                <option value="PENDING">PENDING</option>
+                                                <option value="PROCESSING">PROCESSING</option>
+                                                <option value="SHIPPED">SHIPPED</option>
+                                                <option value="DELIVERED">DELIVERED</option>
+                                                <option value="CANCELLED">CANCELLED</option>
+                                            </select>
+                                            <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-gray-500">
+                                                {isUpdating ? <Loader2 className="h-4 w-4 animate-spin" /> : <ChevronDown className="h-4 w-4" />}
+                                            </div>
+                                        </div>
                                     </div>
-                                )}
-                                 {selectedOrder.status?.toUpperCase() === "CANCELLED" && (
-                                    <div className="space-y-2 mt-2">
+
+                                    <div className="mt-4 pt-4 border-t border-gray-100">
                                         {isConfirmingDelete ? (
                                             <div className="bg-red-50 p-3 rounded-md border border-red-200">
-                                                <p className="text-[12px] text-red-700 font-medium mb-2">Are you sure? This will PERMANENTLY delete the order record.</p>
+                                                <p className="text-[12px] text-red-700 font-medium mb-2">Are you sure? This will PERMANENTLY delete the order record from the database.</p>
                                                 <div className="flex gap-2">
                                                     <button
                                                         disabled={isUpdating}
@@ -502,10 +517,7 @@ export default function OrdersPage() {
                                             </button>
                                         )}
                                     </div>
-                                )}
-                                {(selectedOrder.status?.toUpperCase() === "DELIVERED") && (
-                                    <p className="text-[13px] text-gray-500 text-center italic mt-2">No further actions required.</p>
-                                )}
+                                </div>
                             </div>
                         </div>
 
