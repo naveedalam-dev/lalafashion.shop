@@ -85,6 +85,12 @@ export default function RootLayout({
                 availableLanguage: ["English", "Urdu"],
                 areaServed: "PK",
               },
+              sameAs: [
+                "https://x.com/lalafashion_shp",
+                "https://www.instagram.com/lalafashion.shp/",
+                "https://www.threads.com/@lalafashion.shp",
+                "https://www.tiktok.com/@lalafashion.shp"
+              ],
             }),
           }}
         />
