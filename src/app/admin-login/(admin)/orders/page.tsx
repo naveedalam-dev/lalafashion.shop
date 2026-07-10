@@ -23,6 +23,35 @@ export default function OrdersPage() {
 
     useEffect(() => {
         fetchOrders();
+        
+        const channel = supabase
+            .channel('orders_realtime')
+            .on(
+                'postgres_changes',
+                { event: 'INSERT', schema: 'public', table: 'orders' },
+                async (payload) => {
+                    
+                    // Fetch full order details including relations
+                    const { data, error } = await supabase
+                        .from('orders')
+                        .select(`
+                            *,
+                            user:profiles!user_id(full_name, email, avatar_url),
+                            items:order_items(id, product_id, quantity, unit_price, total_price, selected_color, product:products!product_id(name, image_url))
+                        `)
+                        .eq('id', payload.new.id)
+                        .single();
+                        
+                    if (data && !error) {
+                        setOrders(prevOrders => [data, ...prevOrders]);
+                    }
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

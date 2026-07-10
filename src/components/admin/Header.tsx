@@ -24,7 +24,7 @@ function useOutsideClick(ref: React.RefObject<HTMLElement | null>, callback: () 
 
 export default function Header() {
     const [notifications, setNotifications] = useState<any[]>([]);
-    const [hasUnread, setHasUnread] = useState(false);
+    const [unreadCount, setUnreadCount] = useState(0);
     const [showNotifications, setShowNotifications] = useState(false);
     const [showUserMenu, setShowUserMenu] = useState(false);
     const { theme, setTheme } = useTheme();
@@ -32,9 +32,85 @@ export default function Header() {
     const supabase = createClient();
     const router = useRouter();
 
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const audioCtxRef = useRef<AudioContext | null>(null);
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+            const ctx = new AudioCtx();
+            audioCtxRef.current = ctx;
+
+            const audio = new Audio("/sounds/notification.mp3");
+            audio.load();
+            audioRef.current = audio;
+
+            const unlockAudio = async () => {
+                console.log("Before unlock AudioContext state:", ctx.state);
+                if (ctx.state === "suspended") {
+                    try {
+                        await ctx.resume();
+                        console.log("After unlock AudioContext state:", ctx.state);
+                    } catch (e) {
+                        console.error("AudioContext resume failed:", e);
+                    }
+                }
+                
+                document.removeEventListener('click', unlockAudio);
+                document.removeEventListener('pointerdown', unlockAudio);
+                document.removeEventListener('keydown', unlockAudio);
+            };
+
+            document.addEventListener('click', unlockAudio);
+            document.addEventListener('pointerdown', unlockAudio);
+            document.addEventListener('keydown', unlockAudio);
+
+            return () => {
+                document.removeEventListener('click', unlockAudio);
+                document.removeEventListener('pointerdown', unlockAudio);
+                document.removeEventListener('keydown', unlockAudio);
+                if (ctx.state !== "closed") {
+                    ctx.close().catch(console.error);
+                }
+            };
+        }
+    }, []);
+
+    const playNotificationSound = () => {
+        const ctx = audioCtxRef.current;
+        const audio = audioRef.current;
+        
+        if (ctx && ctx.state === "running" && audio) {
+            console.log("Playing notification sound");
+            
+            audio.currentTime = 0;
+            audio.volume = 1;
+            audio.muted = false;
+
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    console.log("Sound success");
+                }).catch(error => {
+                    console.error("Audio play error:", error);
+                });
+            }
+        } else {
+            console.log("AudioContext not running or Audio not initialized. State:", ctx?.state);
+        }
+    };
+
     useEffect(() => {
         setMounted(true);
         fetchInitialNotifications();
+
+        // Request browser notification permission
+        if (typeof window !== "undefined" && "Notification" in window) {
+            if (Notification.permission !== "granted" && Notification.permission !== "denied") {
+                Notification.requestPermission();
+            }
+        }
 
         // Subscribe to NEW orders
         const channel = supabase
@@ -53,11 +129,16 @@ export default function Header() {
                         is_new: true
                     };
                     setNotifications(prev => [notification, ...prev].slice(0, 10));
-                    setHasUnread(true);
+                    setUnreadCount(prev => prev + 1);
                     
-                    // Optional: Play sound or toast
-                    if (typeof window !== "undefined") {
-                         // new Audio('/notification.mp3').play().catch(() => {}); 
+                    playNotificationSound();
+
+                    // Show native browser notification
+                    if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
+                        new Notification("New Order Received!", {
+                            body: `Order ${newOrder.order_number} for Rs ${newOrder.total_amount}`,
+                            icon: "/Favicon.png"
+                        });
                     }
                 }
             )
@@ -159,13 +240,15 @@ export default function Header() {
                     <button
                         onClick={() => {
                             setShowNotifications(!showNotifications);
-                            setHasUnread(false);
+                            setUnreadCount(0);
                         }}
                         className="relative p-1.5 text-gray-600 dark:text-gray-400 hover:bg-black/5 dark:hover:bg-white/5 rounded-md transition-colors"
                     >
                         <Bell className="h-5 w-5" />
-                        {hasUnread && (
-                            <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 border border-white dark:border-gray-900 animate-pulse"></span>
+                        {unreadCount > 0 && (
+                            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white border border-white dark:border-gray-900 animate-pulse">
+                                {unreadCount > 9 ? '9+' : unreadCount}
+                            </span>
                         )}
                     </button>
 

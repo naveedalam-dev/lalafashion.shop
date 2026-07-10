@@ -244,7 +244,7 @@ export default function CheckOut({ step }: { step?: string }) {
   const { showToast } = useCustomToast();
   const { resetGuestToken } = useGuestCartToken();
 
-  const cartDetail = useAppSelector((state) => state.cartDetail);
+  const cartDetail = useAppSelector((state: any) => state.cartDetail);
   const cartItemsData = cartDetail?.cart?.items?.edges || [];
   const cartItems = Array.isArray(cartItemsData) ? cartItemsData : [];
   const subtotal = (cartDetail?.cart as any)?.subtotal || (cartDetail?.cart as any)?.grandTotal || 0;
@@ -345,9 +345,10 @@ export default function CheckOut({ step }: { step?: string }) {
 
   /* Sync URL step parameter with local state */
   useEffect(() => {
-    if (step === "payment") setCurrentStep(2);
-    else if (step === "review") setCurrentStep(3);
+    if (step === "payment" && isStep1Valid()) setCurrentStep(2);
+    else if (step === "review" && isStep1Valid()) setCurrentStep(3);
     else setCurrentStep(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 
   /* Update value + validate on change — handles both typing and autofill */
@@ -482,6 +483,12 @@ export default function CheckOut({ step }: { step?: string }) {
   };
 
   const handleCompleteOrder = async () => {
+    if (!isStep1Valid()) {
+      showToast("Please complete your shipping details first.", "warning");
+      setCurrentStep(1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
     if (cartItems.length === 0) { showToast("Your cart is empty.", "warning"); return; }
     setIsLoading(true);
     try {
