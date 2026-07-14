@@ -134,9 +134,15 @@ export default async function Footer() {
             </div>
           </div>
 
-          <div className="max-w-7xl mx-auto mt-12 pt-4 border-t border-neutral-300 dark:border-neutral-800 flex justify-between items-center z-10 relative transition-colors duration-300">
-            <p className="text-neutral-600 dark:text-neutral-400 text-sm transition-colors duration-300">© {currentYear} LalaFashion Design</p>
-            <p className='text-sm text-neutral-600 dark:text-neutral-400 transition-colors duration-300'>All right reserved.</p>
+          <div className="max-w-7xl mx-auto mt-12 pt-4 border-t border-neutral-300 dark:border-neutral-800 flex flex-col items-center gap-4 z-10 relative transition-colors duration-300 pb-4">
+            <div className="text-center w-full">
+              <p className="text-neutral-600 dark:text-neutral-400 text-sm transition-colors duration-300 mb-2">
+                © {currentYear} LALA FASHION. All rights reserved.
+              </p>
+              <p className='text-xs text-neutral-500 dark:text-neutral-500 transition-colors duration-300 max-w-4xl mx-auto leading-relaxed'>
+                LALA FASHION, HOUSE NO PD 145 D1 G FLOOR MAIN STREET PINDORA SATELLITE TOWN, Rawalpindi, Punjab, Rawalpindi. Ph: +92 339 2255 235 | support@lalafashion.store
+              </p>
+            </div>
           </div>
           <div className="relative">
             <div className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-3xl h-full max-h-64 bg-slate-100 dark:bg-slate-900 rounded-full blur-[100px] pointer-events-none transition-colors duration-300" />

@@ -58,40 +58,64 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
       <head>
-        {/* ── Organization Schema ───────────────────────────── */}
+        {/* ── GEO & E-E-A-T Schema ───────────────────────────── */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "@id": "https://www.lalafashion.store/#organization",
-              name: "LALA Fashion",
-              url: "https://www.lalafashion.store",
-              logo: {
-                "@type": "ImageObject",
-                url: "https://www.lalafashion.store/Logo.png",
-                width: 200,
-                height: 60,
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "@id": "https://www.lalafashion.store/#organization",
+                name: "LALA FASHION",
+                url: "https://www.lalafashion.store",
+                logo: {
+                  "@type": "ImageObject",
+                  url: "https://www.lalafashion.store/Logo.png",
+                  width: 200,
+                  height: 60,
+                },
+                description: "Pakistan's premium digital destination for luxury gifts, precision watches, and exquisite jewelry.",
+                sameAs: [
+                  "https://x.com/lalafashion_shp",
+                  "https://www.instagram.com/lalafashion.shp/",
+                  "https://www.threads.com/@lalafashion.shp",
+                  "https://www.tiktok.com/@lalafashion.shp"
+                ],
               },
-              description: "Pakistan's premium digital destination for luxury gifts, precision watches, and exquisite jewelry.",
-              address: {
-                "@type": "PostalAddress",
-                addressCountry: "PK",
-              },
-              contactPoint: {
-                "@type": "ContactPoint",
-                contactType: "customer support",
-                availableLanguage: ["English", "Urdu"],
-                areaServed: "PK",
-              },
-              sameAs: [
-                "https://x.com/lalafashion_shp",
-                "https://www.instagram.com/lalafashion.shp/",
-                "https://www.threads.com/@lalafashion.shp",
-                "https://www.tiktok.com/@lalafashion.shp"
-              ],
-            }),
+              {
+                "@context": "https://schema.org",
+                "@type": ["LocalBusiness", "Store"],
+                "@id": "https://www.lalafashion.store/#localbusiness",
+                name: "LALA FASHION",
+                url: "https://www.lalafashion.store",
+                image: "https://www.lalafashion.store/Logo.png",
+                telephone: "+92 339 2255 235",
+                email: "support@lalafashion.store",
+                address: {
+                  "@type": "PostalAddress",
+                  streetAddress: "HOUSE NO PD 145 D1 G FLOOR MAIN STREET PINDORA SATELLITE TOWN",
+                  addressLocality: "Rawalpindi",
+                  addressRegion: "Punjab",
+                  addressCountry: "PK"
+                },
+                openingHoursSpecification: [
+                  {
+                    "@type": "OpeningHoursSpecification",
+                    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Saturday", "Sunday"],
+                    opens: "09:00",
+                    closes: "20:00"
+                  },
+                  {
+                    "@type": "OpeningHoursSpecification",
+                    dayOfWeek: "Friday",
+                    opens: "10:00",
+                    closes: "22:00"
+                  }
+                ],
+                priceRange: "$$"
+              }
+            ]),
           }}
         />
         {/* ── WebSite + SearchAction Schema ─────────────────── */}

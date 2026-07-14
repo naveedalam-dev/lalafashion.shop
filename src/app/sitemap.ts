@@ -40,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { data: products } = await supabase
     .from('products')
     .select('slug, updated_at')
-    .eq('stock_status', 'ACTIVE')
+    .in('stock_status', ['ACTIVE', 'IN_STOCK'])
     .not('slug', 'is', null)
     .order('updated_at', { ascending: false });
 
@@ -67,7 +67,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         .from('products')
         .select('category_id')
         .in('category_id', categoryIds)
-        .eq('stock_status', 'ACTIVE')
+        .in('stock_status', ['ACTIVE', 'IN_STOCK'])
     : { data: [] };
 
   const activeCategoryIds = new Set(

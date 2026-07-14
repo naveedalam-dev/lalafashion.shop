@@ -87,6 +87,31 @@ const ContactPage = () => {
 
     return (
         <div className="bg-[#f9fafb] min-h-screen py-16 px-4 transition-colors duration-300 dark:bg-neutral-950">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "ContactPage",
+                        "url": "https://www.lalafashion.store/contact",
+                        "name": "Contact Us - LALA FASHION",
+                        "description": "Get in touch with the LALA FASHION team.",
+                        "mainEntity": {
+                            "@type": "LocalBusiness",
+                            "name": "LALA FASHION",
+                            "telephone": "+92 339 2255 235",
+                            "email": "support@lalafashion.store",
+                            "address": {
+                                "@type": "PostalAddress",
+                                "streetAddress": "HOUSE NO PD 145 D1 G FLOOR MAIN STREET PINDORA SATELLITE TOWN",
+                                "addressLocality": "Rawalpindi",
+                                "addressRegion": "Punjab",
+                                "addressCountry": "PK"
+                            }
+                        }
+                    })
+                }}
+            />
             {/* Boxed Container */}
             <div className="max-w-[1100px] mx-auto">
                 
@@ -231,8 +256,9 @@ const ContactPage = () => {
                                     <div>
                                         <p className="font-bold text-gray-900 dark:text-white">Visit Our Store</p>
                                         <p className="text-sm text-gray-500 dark:text-neutral-400 leading-relaxed">
-                                            PD 145, Ground Floor, Main Street,<br />
-                                            Pindora Chungi, Rawalpindi
+                                            LALA FASHION, HOUSE NO PD 145 D1 G FLOOR<br />
+                                            MAIN STREET PINDORA SATELLITE TOWN<br />
+                                            Rawalpindi, Punjab, Rawalpindi
                                         </p>
                                     </div>
                                 </div>
@@ -244,7 +270,7 @@ const ContactPage = () => {
                                     <div>
                                         <p className="font-bold text-gray-900 dark:text-white">Call Us</p>
                                         <p className="text-sm text-gray-500 dark:text-neutral-400 leading-relaxed">
-                                            0339-2255235
+                                            +92 339 2255 235
                                         </p>
                                     </div>
                                 </div>

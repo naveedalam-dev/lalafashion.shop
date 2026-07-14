@@ -156,7 +156,7 @@ export default function TrackOrderForm() {
       {/* ── Help links (only show when no order) ── */}
       {!order && !loading && (
         <div className="tof-help">
-          <p>Having trouble? <a href="/contact" className="tof-link">Contact Support</a> or <a href="/faq" className="tof-link">View FAQs</a></p>
+          <p>Having trouble? <a href="/contact" className="tof-link">Contact Support</a> or <a href="/faqs" className="tof-link">View FAQs</a></p>
         </div>
       )}
 

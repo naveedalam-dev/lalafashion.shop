@@ -32,7 +32,7 @@ export default function ProductsPage() {
         description: "",
         made_in: "",
         design: "",
-        delivery_info: "Usually ships in 24 hours",
+        delivery_info: "Usually ships in 3-5 business days",
         available_qty: "0",
         image_url: "",
         images: [] as string[],
@@ -237,7 +237,7 @@ export default function ProductsPage() {
         setFormData({
             id: "", name: "", sku: "", stock_status: "ACTIVE", sale_price: "", mrp: "",
             category_id: "", description: "", made_in: "", design: "",
-            delivery_info: "Usually ships in 24 hours", available_qty: "0",
+            delivery_info: "Usually ships in 3-5 business days", available_qty: "0",
             image_url: "", images: [], colors: [],
             shipping_cost_type: "free", shipping_cost_value: ""
         });

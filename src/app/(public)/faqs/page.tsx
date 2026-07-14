@@ -40,6 +40,23 @@ export default function FAQPage() {
 
     return (
         <div className="bg-white dark:bg-background min-h-screen font-outfit text-slate-900 dark:text-foreground">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "FAQPage",
+                        "mainEntity": faqs.map((faq) => ({
+                            "@type": "Question",
+                            "name": faq.question,
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": faq.answer
+                            }
+                        }))
+                    })
+                }}
+            />
             {/* Hero Header */}
             <header className="relative pt-24 pb-16 overflow-hidden">
                 {/* Dot pattern overlay */}
