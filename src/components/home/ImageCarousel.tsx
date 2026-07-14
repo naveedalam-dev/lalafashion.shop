@@ -137,7 +137,7 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options }) => {
                     return (
                         <div
                             key={index}
-                            className={`absolute inset-0 transition-opacity duration-700 ${isActive ? "opacity-100 z-0" : "opacity-0 z-0"}`}
+                            className={`absolute inset-0 transition-opacity duration-700 ${isActive ? "opacity-100 z-10 pointer-events-auto" : "opacity-0 z-0 pointer-events-none"}`}
                             style={{
                                 position: 'absolute',
                                 top: 0,
@@ -148,7 +148,7 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options }) => {
                         >
                             {img.link ? (
                                 <Link
-                                    href={`/shop/${img.link}`}
+                                    href={img.link.startsWith('/') ? img.link : `/shop/${img.link}`}
                                     className="block h-full w-full"
                                     aria-label={`View ${altText}`}
                                 >
@@ -182,7 +182,7 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options }) => {
                 })}
 
                 {images.length > 1 && (
-                    <div className="absolute bottom-4 left-1/2 z-0 flex items-center -translate-x-1/2 gap-1.5 rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-md md:bottom-6">
+                    <div className="absolute bottom-4 left-1/2 z-20 flex items-center -translate-x-1/2 gap-1.5 rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-md md:bottom-6">
                         {images.map((_, index) => (
                             <button
                                 key={index}

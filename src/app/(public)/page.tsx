@@ -47,10 +47,18 @@ export default async function Home() {
 
   const heroOptions = {
     timer: storeSettings?.hero_slider_timer || 5000,
-    images: heroSlides?.map((slide: any) => ({
-      image: slide.image_url,
-      link: slide.link_url || "",
-    })) || []
+    images: heroSlides?.map((slide: any) => {
+      let customLink = slide.link_url || "";
+      if (slide.image_url?.includes('4ya59y32pfg_1783378098528.png')) customLink = '/category/jewellery';
+      else if (slide.image_url?.includes('5w1koo35ets_1783378109069.png')) customLink = '/category/electronics';
+      else if (slide.image_url?.includes('nevdjeob83b_1783378083034.png')) customLink = '/category/watches';
+      else if (slide.image_url?.includes('wj5dccymu9_1783378065493.png')) customLink = '/category/glasses';
+      
+      return {
+        image: slide.image_url,
+        link: customLink,
+      };
+    }) || []
   };
 
   // 2. Fetch Featured Products
