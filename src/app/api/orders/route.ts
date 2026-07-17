@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { trackConversion } from "@/lib/tiktok/conversions";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -117,6 +118,32 @@ export async function POST(req: NextRequest) {
           .update({ used_count: (couponRow.used_count || 0) + 1 })
           .eq("id", couponRow.id);
       }
+    }
+
+    // 4. Server-side TikTok Purchase event (most accurate — fires regardless of browser)
+    try {
+      const contents = cartItems
+        .map((item: any) => ({
+          content_id: String(item.productId || item.product_id || "").split("/").pop() || "",
+          content_name: item.name || item.product_name || "Product",
+          quantity: item.quantity,
+          price: item.price,
+        }))
+        .filter((c: any) => c.content_id !== "" && c.content_id !== "unknown");
+
+      await trackConversion("Purchase", {
+        value: orderTotal,
+        currency: "PKR",
+        email: shippingData.email || undefined,
+        phone: shippingData.contact || undefined,
+        ip_address: req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || undefined,
+        user_agent: req.headers.get("user-agent") || undefined,
+        order_id: orderData.order_number,
+        contents,
+      });
+    } catch (tiktokErr) {
+      // Non-blocking — order is already placed, just log the error
+      console.error("TikTok server Purchase error:", tiktokErr);
     }
 
     return NextResponse.json({

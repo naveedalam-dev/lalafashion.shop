@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { Check, Copy, ClipboardCheck, Phone, MapPin, Package, ExternalLink } from "lucide-react";
 import { getCookie } from "@utils/getCartToken";
 import { ORDER_ID } from "@utils/constants";
 import Image from "next/image";
+import { generateBrowserEventId, trackPurchaseBrowser, trackPurchaseServer } from "@/lib/tiktok/useTikTokEvents";
 
 interface OrderItem {
   id: string;
@@ -33,6 +34,7 @@ export default function OrderDetail() {
   const [order, setOrder] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const purchaseTracked = useRef(false);
 
   useEffect(() => {
     const orderId = getCookie(ORDER_ID);
@@ -41,7 +43,27 @@ export default function OrderDetail() {
     fetch(`/api/orders?order_number=${encodeURIComponent(orderId)}`)
       .then((r) => r.json())
       .then((data) => {
-        if (data.order) setOrder(data.order);
+        if (data.order) {
+          setOrder(data.order);
+
+          // ── TikTok Purchase (browser + server) ─────────────────────────────
+          if (!purchaseTracked.current) {
+            purchaseTracked.current = true;
+            const eventId = generateBrowserEventId();
+            const purchaseParams = {
+              order_id: data.order.order_number,
+              total: data.order.total_amount,
+              items: data.order.items || [],
+              event_id: eventId,
+              phone: data.order.contact_phone,
+              email: data.order.email, // If API returns it
+            };
+            // Browser-side (immediate, real-time in dashboard)
+            trackPurchaseBrowser(purchaseParams);
+            // Server-side (accurate, bypasses ad blockers) — same event_id for dedup
+            trackPurchaseServer(purchaseParams);
+          }
+        }
       })
       .catch(console.error)
       .finally(() => setIsLoading(false));

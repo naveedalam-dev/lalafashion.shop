@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/store/hooks";
@@ -12,6 +12,8 @@ import { GridTileImage } from "@components/theme/ui/grid/Tile";
 import { getCookie } from "@utils/getCartToken";
 import { useGuestCartToken } from "@/utils/hooks/useGuestCartToken";
 import Link from "next/link";
+import { trackInitiateCheckout } from "@/lib/tiktok/useTikTokEvents";
+import { trackIdentify } from "@/lib/tiktok/useTikTokEvents";
 
 /* ─── Style tokens ─── */
 const S = {
@@ -302,6 +304,27 @@ export default function CheckOut({ step }: { step?: string }) {
     }
   }, [cartItems]);
 
+  // ── TikTok InitiateCheckout (fires once when cart is ready) ────────────────
+  const checkoutTracked = useRef(false);
+  useEffect(() => {
+    if (cartItems.length > 0 && !checkoutTracked.current) {
+      const items = cartItems.map((edge: any) => {
+        const item = edge.node || edge;
+        const product = item?.product || item;
+        return {
+          product_id: String(product?.id || "").split("/").pop() || "unknown",
+          name: product?.name || "Product",
+          quantity: item?.quantity || 1,
+          price: Number(item?.prices?.price?.value || item?.price || 0),
+        };
+      });
+      const total = Number(subtotal) || items.reduce((s: number, i: any) => s + i.price * i.quantity, 0);
+      trackInitiateCheckout(items, total);
+      checkoutTracked.current = true;
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cartItems]);
+
   const totalShippingCharge = cartItems.reduce((acc: number, edge: any) => {
     const item = edge.node;
     const productId = item?.product?.id || item?.product_id || item?.id;
@@ -429,6 +452,10 @@ export default function CheckOut({ step }: { step?: string }) {
     if (!validateStep1()) {
       showToast("Please fix the errors before continuing.", "warning");
       return;
+    }
+    // ── TikTok Identify: attach phone to all future events ─────────────────────
+    if (formData.contact) {
+      trackIdentify(formData.contact);
     }
     setCurrentStep(2);
     window.scrollTo({ top: 0, behavior: "smooth" });

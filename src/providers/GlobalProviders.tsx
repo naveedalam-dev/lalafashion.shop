@@ -8,6 +8,7 @@ import { ApolloWrapper } from "./ApolloWrapper";
 import { GlobalContextProvider } from "./GlobalContextProvider";
 import { NextAuthProvider } from "./NextAuthProvider";
 import { Suspense } from "react";
+import { TikTokPageViewTracker } from "./TikTokPageViewTracker";
 
 export function GlobalProviders({ children }: { children: ReactNode }) {
   return (
@@ -18,6 +19,7 @@ export function GlobalProviders({ children }: { children: ReactNode }) {
             <ToastProvider>
               <ApolloWrapper>
                 <Suspense fallback={null}>
+                  <TikTokPageViewTracker />
                   {children}
                 </Suspense>
               </ApolloWrapper>

@@ -1,17 +1,18 @@
 "use client";
 import { AddToCart } from "@/components/cart/AddToCart";
 import { VariantSelector } from "./VariantSelector";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getVariantInfo } from "@utils/hooks/useVariantInfo";
 import { useSearchParams } from "next/navigation";
 import { safeParse } from "@utils/helper";
 import { ShareIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { trackViewContent } from "@/lib/tiktok/useTikTokEvents";
 
 export function ProductActions({
     product,
     productSwatchReview,
 }: {
-    product: { id?: string; type?: string; colors?: { name: string; hex: string }[]; stock_status?: string };
+    product: { id?: string; type?: string; colors?: { name: string; hex: string }[]; stock_status?: string; name?: string; price?: number; minimumPrice?: number; };
     productSwatchReview: any;
 }) {
     const configurableProductIndexData = (safeParse(
@@ -22,6 +23,21 @@ export function ProductActions({
     const [copied, setCopied] = useState(false);
     const [selectedColors, setSelectedColors] = useState<{ name: string; hex: string }[]>([]);
     const [quantity, setQuantity] = useState(1);
+
+    // ── TikTok ViewContent ────────────────────────────────────────────────────
+    useEffect(() => {
+        const price = product?.minimumPrice || product?.price || 0;
+        const productId = String(product?.id || "").split("/").pop() || "";
+        if (productId) {
+            trackViewContent({
+                content_id: productId,
+                content_name: product?.name || "Product",
+                value: price,
+                currency: "PKR",
+            });
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [product?.id]);
 
     const superAttributes = productSwatchReview?.superAttributeOptions
         ? safeParse(productSwatchReview.superAttributeOptions)

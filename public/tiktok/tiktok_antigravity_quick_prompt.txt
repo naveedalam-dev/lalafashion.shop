@@ -1,0 +1,66 @@
+GOOGLE ANTIGRAVITY IMPLEMENTATION REQUEST
+==========================================
+
+PROJECT: TikTok Pixel Events Setup for Lala Fashion Store (Next.js)
+
+CURRENT STATE:
+- Pixel ID: D99L713C77U03DOJCBLG
+- Basic code installed ✓
+- Browser events partially working ✓
+- MISSING: 5 critical events + server-side tracking ✗
+
+CRITICAL MISSING EVENTS:
+1. Page view (on all pages)
+2. View content (on product page)
+3. Add to cart (on add to cart action)
+4. Initiate checkout (on checkout page)
+5. Purchase (on order confirmation)
+
+REQUIREMENTS:
+1. Implement both browser-side events AND server-side Conversions API
+2. Create Next.js components/pages with event tracking
+3. Setup environment variables for access token
+4. Add email hashing for privacy (SHA-256)
+5. Include deduplication logic for browser+server events
+6. Add testing methods (curl commands, browser console methods)
+
+DELIVERABLES:
+1. Updated pages/_app.js with PageView tracking
+2. ProductDetail.js component with ViewContent event
+3. AddToCart component with cart event
+4. Checkout page with InitiateCheckout event
+5. OrderConfirmation page with Purchase event
+6. lib/tiktokConversions.js - Conversions API helper
+7. pages/api/tiktok-track.js - Public tracking endpoint
+8. pages/api/orders/confirm.js - Order confirmation tracking
+9. .env.local template with required variables
+10. Testing methods (browser + server-side)
+
+TECHNICAL REQUIREMENTS:
+- Use TikTok Conversions API v1.3 endpoint
+- Implement proper error handling
+- Add event_id for deduplication
+- Hash customer emails before sending
+- Include user IP and user agent in server events
+- Follow TikTok's data privacy guidelines
+- Make all code production-ready
+
+ADDITIONAL:
+- Include implementation checklist
+- Add monitoring/debugging tips
+- Provide TikTok dashboard navigation links
+- Include commented code for clarity
+
+DATA NEEDED FROM LALA FASHION:
+- TikTok Access Token (from Business Center → Events → Conversions API)
+- If you don't have it, I can provide step-by-step instructions
+
+NOTES:
+- This is for a fashion e-commerce store in Pakistan (currency: PKR)
+- Server-side tracking is critical for accuracy (ad blocker bypass)
+- TikTok shows 5.7-7.7% CPA reduction with complete funnel
+- Conversions API better for audience matching and retargeting
+
+PREFERENCE:
+Implement both browser + server methods for maximum tracking accuracy.
+No need to remove existing pixel code - just enhance it.

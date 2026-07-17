@@ -140,7 +140,7 @@ export function ProductDescription({
       <div className="mt-auto pt-6 flex flex-col w-full">
         <Suspense fallback={<div className="h-24 animate-pulse bg-neutral-100 dark:bg-neutral-800 rounded-xl mt-4" />}>
           <ProductActions
-            product={{ id: product?.id, type: product?.type, colors: product?.colors, stock_status: product?.stock_status }}
+            product={{ id: product?.id, type: product?.type, colors: product?.colors, stock_status: product?.stock_status, name: product?.name, price: Number(product?.price) || undefined, minimumPrice: Number(product?.minimumPrice) || undefined }}
             productSwatchReview={productSwatchReview}
           />
         </Suspense>

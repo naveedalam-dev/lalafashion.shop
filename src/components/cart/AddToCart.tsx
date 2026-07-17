@@ -11,6 +11,7 @@ import LoadingDots from "@components/common/icons/LoadingDots";
 import { getVariantInfo } from "@utils/hooks/useVariantInfo";
 import { safeParse } from "@utils/helper";
 import { ProductSwatchReview } from "@/types/category/type";
+import { trackAddToCart } from "@/lib/tiktok/useTikTokEvents";
 
 interface AddToCartFormData {
   quantity: number;
@@ -169,6 +170,17 @@ export function AddToCart({
     });
 
     if (success) {
+      // ── TikTok AddToCart ──────────────────────────────────────────────────
+      const pswr = productSwatchReview as any;
+      const productName = pswr?.name || "Product";
+      const productPrice = pswr?.specialPrice || pswr?.price || pswr?.minimumPrice || 0;
+      trackAddToCart({
+        content_id: pid,
+        content_name: productName,
+        value: productPrice * data.quantity,
+        quantity: data.quantity,
+        currency: "PKR",
+      });
       router.push("/checkout");
     }
   };
